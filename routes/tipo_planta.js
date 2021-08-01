@@ -8,10 +8,16 @@ router.get('/',(req, res, next) =>{
     });
 });
 
-//INSERE USUARIOS 
+//INSERE TIPO PLANTA 
 router.post('/',(req, res, next) =>{
+    const tipo_planta = {
+        id_usuario: req.body.id_usuario,
+        descricao: req.body.descricao,
+        data: req.body.data
+    };
     res.status(201).send({
-        mensagem: 'Insere um usuario'
+        mensagem: 'Insere um tipo de planta',
+        Tipo_PlantaCriado: tipo_planta
     });
 });
 // RETORNA OS DADOS DE UM PRODUTO
