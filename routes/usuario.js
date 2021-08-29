@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 //RETORNA TODOS USUARIOS
 router.get('/',(req, res, next) =>{
     res.status(200).send({
@@ -39,13 +40,48 @@ router.post('/cadastro',(req, res, next) =>{
                                 }
                             }
                             res.status(201).send({response});
-        
                     })
                 })
             }
         })
     })
 });
+
+router.post('/login',(req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error});}
+        const query = 'SELECT * FROM usuario WHERE email = ?';
+        conn.query(query, [req.body.email], (error, resultado, fields) =>{
+            conn.release();
+            if(error){return res.status(500).send({error:error});}
+            if(resultado.length<1){
+                res.status(401).send({mensagem: 'Falha na autenticação'})
+            }
+            bcrypt.compare(req.body.senha, resultado[0].senha,(err, resultado_senha)=>{
+                if(err){
+                    return res.status(401).send({ mensagem: 'Falha na autenticação' })
+                }
+                if(resultado_senha){
+                    const token = jwt.sign({
+                        id_usuario: resultado[0].id_usuario,
+                        email: resultado[0].email,
+                        tipo_usuario: resultado[0].tipo_usuario
+                    }, 
+                    process.env.JWT_KEY, 
+                    {
+                        expiresIn: "1h"
+                    });
+
+                    return res.status(200).send({ 
+                        mensagem: 'Autenticado com sucesso',
+                        token: token
+                })
+                }
+                return res.status(401).send({ mensagem: 'Falha na autenticação' })
+            })
+        })
+    })
+})
 // RETORNA OS DADOS DE UM USUARIO
 router.get('/:id_usuario',(req, res, next) =>{
     const id = req.params.id_usuario
