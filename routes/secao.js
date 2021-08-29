@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
+const login = require('../middleware/login');
 //RETORNA TODOS OD TIPOS DE PLANTAS
-router.get('/',(req, res, next) =>{
+router.get('/',login.obrigatorio,(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
@@ -31,7 +32,8 @@ router.get('/',(req, res, next) =>{
     });
 });
 //INSERE SECAO 
-router.post('/',(req, res, next) =>{
+router.post('/',login.obrigatorio,(req, res, next) =>{
+    console.log(req.usuario)
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
@@ -60,7 +62,7 @@ router.post('/',(req, res, next) =>{
     })
 });
 // RETORNA OS DADOS DE UM TIPO DE PLANTA
-router.get('/:id_secao',(req, res, next) =>{
+router.get('/:id_secao',login.obrigatorio,(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
@@ -93,7 +95,7 @@ router.get('/:id_secao',(req, res, next) =>{
 });
 
 
-router.patch('/',(req, res, next) =>{
+router.patch('/',login.obrigatorio,(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
@@ -122,7 +124,7 @@ router.patch('/',(req, res, next) =>{
     })
 });
 
-router.delete('/',(req, res, next) =>{
+router.delete('/',login.obrigatorio,(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
