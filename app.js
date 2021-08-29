@@ -4,6 +4,9 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const rotaUsuarios = require('./routes/usuario');
 const rotaTipo_plantas = require('./routes/tipo_planta');
+const rotaSecao = require('./routes/secao');
+const rotaPlanta = require('./routes/planta');
+const rotaCliente = require('./routes/cliente');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extend: false}));//dados simples
@@ -21,6 +24,9 @@ app.use((req,res,next) =>{
 
 app.use('/tipo_planta',rotaTipo_plantas);
 app.use('/usuario',rotaUsuarios);
+app.use('/secao',rotaSecao);
+app.use('/planta',rotaPlanta);
+app.use('/cliente',rotaCliente);
 
 app.use((req, res, next) =>{
     const erro = new Error('Nao encontrado rota');

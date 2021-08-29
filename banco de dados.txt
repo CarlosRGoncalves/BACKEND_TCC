@@ -1,0 +1,170 @@
+-- MySQL Workbench Synchronization
+-- Generated: 2021-08-18 21:05
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: User
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`usuario` (
+  `id_usuario` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(200) NOT NULL,
+  `telefone` VARCHAR(45) NOT NULL,
+  `tipo_usuario` INT(11) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_usuario`),
+  UNIQUE INDEX `Email_UNIQUE` (`email` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`secao` (
+  `id_secao` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` INT(11) NOT NULL,
+  `descricao` VARCHAR(200) NOT NULL,
+  `area` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`id_secao`),
+  INDEX `fk_secao_funcionario1_idx` (`id_usuario` ASC) VISIBLE,
+  CONSTRAINT `fk_secao_funcionario1`
+    FOREIGN KEY (`id_usuario`)
+    REFERENCES `mydb`.`usuario` (`id_usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`tipo_planta` (
+  `id_tipo_plantas` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` INT(11) NOT NULL,
+  `nome` VARCHAR(45) NOT NULL,
+  `descricao` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`id_tipo_plantas`),
+  INDEX `fk_tipo_de_plantas_funcionario1_idx` (`id_usuario` ASC) VISIBLE,
+  CONSTRAINT `fk_tipo_de_plantas_funcionario1`
+    FOREIGN KEY (`id_usuario`)
+    REFERENCES `mydb`.`usuario` (`id_usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`insumo` (
+  `id_insumo` INT(11) NOT NULL AUTO_INCREMENT,
+  `descricao` VARCHAR(200) NOT NULL,
+  `quantidade` INT(11) NOT NULL,
+  `data` DATE NOT NULL,
+  `valor` DOUBLE NOT NULL,
+  PRIMARY KEY (`id_insumo`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`planta` (
+  `id_planrta` INT(11) NOT NULL AUTO_INCREMENT,
+  `tipo_planta` INT(11) NOT NULL,
+  `descricao` VARCHAR(200) NOT NULL,
+  `epoca_plantio` VARCHAR(100) NOT NULL,
+  `forma_plantio` VARCHAR(100) NOT NULL,
+  `tempo_colheita` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id_planrta`),
+  INDEX `fk_ensumos_tipo_de_plantas1_idx` (`tipo_planta` ASC) VISIBLE,
+  CONSTRAINT `fk_ensumos_tipo_de_plantas10`
+    FOREIGN KEY (`tipo_planta`)
+    REFERENCES `mydb`.`tipo_planta` (`id_tipo_plantas`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`plantio` (
+  `id_plantio` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_secao` INT(11) NOT NULL,
+  `id_planta` INT(11) NOT NULL,
+  `descricao` VARCHAR(200) NOT NULL,
+  `quantidade` INT(11) NOT NULL,
+  `data_plantio` DATE NOT NULL,
+  `valor_custo` DOUBLE NOT NULL,
+  PRIMARY KEY (`id_plantio`),
+  INDEX `fk_plantio_secao1_idx` (`id_secao` ASC) VISIBLE,
+  INDEX `fk_plantio_planta1_idx` (`id_planta` ASC) VISIBLE,
+  CONSTRAINT `fk_plantio_secao1`
+    FOREIGN KEY (`id_secao`)
+    REFERENCES `mydb`.`secao` (`id_secao`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_plantio_planta1`
+    FOREIGN KEY (`id_planta`)
+    REFERENCES `mydb`.`planta` (`id_planrta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`producao` (
+  `id_producao` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_insumo` INT(11) NOT NULL,
+  `id_plantio` INT(11) NOT NULL,
+  `adubacao` VARCHAR(100) NOT NULL,
+  `defensivo` VARCHAR(100) NOT NULL,
+  `data_defensivo` DATE NOT NULL,
+  `data_adubacao` DATE NOT NULL,
+  `qtd_adubacao` DOUBLE NOT NULL,
+  `qtd_defensivo` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_producao`),
+  INDEX `fk_producao_insumo1_idx` (`id_insumo` ASC) VISIBLE,
+  INDEX `fk_producao_plantio1_idx` (`id_plantio` ASC) VISIBLE,
+  CONSTRAINT `fk_producao_insumo1`
+    FOREIGN KEY (`id_insumo`)
+    REFERENCES `mydb`.`insumo` (`id_insumo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_producao_plantio1`
+    FOREIGN KEY (`id_plantio`)
+    REFERENCES `mydb`.`plantio` (`id_plantio`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`cliente` (
+  `id_funcionario` INT(11) NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NOT NULL,
+  `telefone` VARCHAR(45) NOT NULL,
+  `cpf` VARCHAR(45) NOT NULL,
+  `endereco` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`id_funcionario`),
+  UNIQUE INDEX `Email_UNIQUE` (`email` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`colheita` (
+  `id_colheita` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_cliente` INT(11) NOT NULL,
+  `id_producao` INT(11) NOT NULL,
+  `data_colheita` DATE NOT NULL,
+  `quantidade` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`id_colheita`),
+  INDEX `fk_colheita_cliente1_idx` (`id_cliente` ASC) VISIBLE,
+  INDEX `fk_colheita_producao1_idx` (`id_producao` ASC) VISIBLE,
+  CONSTRAINT `fk_colheita_cliente1`
+    FOREIGN KEY (`id_cliente`)
+    REFERENCES `mydb`.`cliente` (`id_funcionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_colheita_producao1`
+    FOREIGN KEY (`id_producao`)
+    REFERENCES `mydb`.`producao` (`id_producao`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
