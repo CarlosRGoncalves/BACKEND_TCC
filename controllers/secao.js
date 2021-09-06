@@ -62,7 +62,7 @@ exports.postSecao = (req, res, next) =>{
     })
 }
 // RETORNA OS DADOS DE UM TIPO DE PLANTA
-exports.getSecao = (req, res, next) =>{
+exports.getSecaoID = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
@@ -72,7 +72,7 @@ exports.getSecao = (req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
-                    return res.length(404).send({
+                    return res.status(404).send({
                         mensagem:' Não foi encontrado tipo de planta com este ID'
                     })
                 }
