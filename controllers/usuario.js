@@ -52,27 +52,28 @@ exports.postUsuario = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error});}
         const query = 'SELECT * FROM usuario WHERE email = ?';
-       console.log("teste");
-       console.log(req.body.email);
-            console.log(req.body.senha);
+      // console.log("teste");
+      // console.log(req.body.email);
+        //    console.log(req.body.senha);
         conn.query(query, [req.body.email], (error, resultado, fields) =>{
             conn.release();
             if(error){return res.status(500).send({error:error});}
             if(resultado.length<1){
-                console.log('aquidd')
+               // console.log('aquidd')
                 return res.status(401).send({mensagem: 'Falha na autenticação'})
             }
-            console.log(resultado)
-            console.log(req.body.email);
-            console.log(req.body.senha);
+           // console.log(resultado)
+          //  console.log(req.body.email);
+           // console.log(req.body.senha);
             bcrypt.compare(req.body.senha, resultado[0].senha,(err, resultado_senha)=>{
                 if(err){
-                    console.log('aqui1')
+                    //console.log('aqui1')
                     return res.status(401).send({ mensagem: 'Falha na autenticação' })
                 }
                 if(resultado_senha){
                     const token = jwt.sign({
                         id_usuario: resultado[0].id_usuario,
+                        nome: resultado[0].nome,
                         email: resultado[0].email,
                         tipo_usuario: resultado[0].tipo_usuario
                     }, 
@@ -80,13 +81,13 @@ exports.postUsuario = (req, res, next) =>{
                     {
                         expiresIn: "1h"
                     });
-                    console.log('Sucesso')
+                    //console.log('Sucesso')
                     return res.status(200).send({ 
                         mensagem: 'Autenticado com sucesso',
                         token: token
                     })
                 }
-                console.log('aqui')
+                //console.log('aqui')
                 return res.status(401).send({ mensagem: 'Falha na autenticação' })
             })
         })

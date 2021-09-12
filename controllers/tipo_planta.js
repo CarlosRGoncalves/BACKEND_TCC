@@ -20,7 +20,7 @@ exports.gettipo_planta =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos os tipos de plantas',
-                                url: 'http://localhost:3000/tipo_planta/' + tp_plantas.id_tipo_plantas
+                                url: 'http://localhost:3006/tipo_planta/' + tp_plantas.id_tipo_plantas
                             }
                         }
                     })
@@ -51,7 +51,7 @@ exports.posttipo_planta =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Tipo de Planta',
-                            url: 'http://localhost:3000/tipo_planta'
+                            url: 'http://localhost:3006/tipo_planta'
                         }
                     }
                 }
@@ -83,7 +83,7 @@ exports.gettipo_planta =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes do Tipo de Planta',
-                            url: 'http://localhost:3000/tipo_planta'
+                            url: 'http://localhost:3006/tipo_planta'
                         }
                     }
                 }
@@ -113,7 +113,7 @@ exports.patchtipo_planta =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Tipo de Planta',
-                            url: 'http://localhost:3000/tipo_planta/' + req.body.id_tipo_planta
+                            url: 'http://localhost:3006/tipo_planta/' + req.body.id_tipo_planta
                         }
                     }
                 }
@@ -138,7 +138,7 @@ exports.deletetipo_planta =(req, res, next) =>{
                     request:{
                         tipo: 'POST',
                         descriucao: 'insere um tipo de planta',
-                        url:'http://localhost:3000/tipo_planta/'
+                        url:'http://localhost:3006/tipo_planta/'
                     }
                 }
                return res.status(202).send({response});

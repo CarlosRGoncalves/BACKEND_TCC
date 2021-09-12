@@ -30,6 +30,7 @@ exports.getCliente = (req, res, next) =>{
         conn.query(
             'SELECT * FROM cliente',
             (error, result, field) =>{
+                conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
@@ -44,7 +45,7 @@ exports.getCliente = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos os tipos cliente',
-                                url: 'http://localhost:3000/cliente/' + tp_cliente.id_cliente
+                                url: 'http://localhost:3006/cliente/' + tp_cliente.id_cliente
                             }
                         }
                     })
@@ -55,7 +56,7 @@ exports.getCliente = (req, res, next) =>{
     });
 }
 // RETORNA OS DADOS DE UM CLIENTE
-exports.getCliente = (req, res, next) =>{
+exports.getCliente2 = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
@@ -79,7 +80,7 @@ exports.getCliente = (req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes dos Clientes',
-                            url: 'http://localhost:3000/cliente'
+                            url: 'http://localhost:3006/cliente'
                         }
                     }
                 }
@@ -111,7 +112,7 @@ exports.patchCliente = (req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Cliente',
-                            url: 'http://localhost:3000/cliente/' + req.body.id_cliente
+                            url: 'http://localhost:3006/cliente/' + req.body.id_cliente
                         }
                     }
                 }
@@ -135,7 +136,7 @@ exports.deleteCliente = (req, res, next) =>{
                     request:{
                         tipo: 'POST',
                         descriucao: 'insere um tipo de planta',
-                        url:'http://localhost:3000/cliente/'
+                        url:'http://localhost:3006/cliente/'
                     }
                 }
                return res.status(202).send({response});
