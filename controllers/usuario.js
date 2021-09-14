@@ -5,8 +5,33 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //RETORNA TODOS USUARIOS
 exports.getUsuario = (req, res, next) =>{
-    res.status(200).send({
-        mensagem: 'Retorna todos os usuarios'
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});}
+        conn.query(
+            'SELECT * FROM usuario',
+            (error, result, field) =>{
+                conn.release();
+                if(error){return res.status(500).send({error:error,response: null});}
+                const response = {
+                    quantidade: result.length,
+                    usuario: result.map(tp_usuario =>{
+                        return {
+                            id_usuario: tp_usuario.id_usuario,
+                            nome: tp_usuario.nome,
+                            email: tp_usuario.email,
+                            telefone: tp_usuario.telefone,
+                            tipo_usuario: tp_usuario.tipo_usuario,
+                            request: {
+                                tipo: 'GET',
+                                descricao: 'Retorno de todos os Usuarios',
+                                url: 'http://localhost:3006/usuario/' + tp_usuario.id_usuario
+                            }
+                        }
+                    })
+                }
+                return res.status(200).send(response);
+            }
+        )
     });
 }
 
@@ -94,21 +119,6 @@ exports.postUsuario = (req, res, next) =>{
       
     })
 }
-// RETORNA OS DADOS DE UM USUARIO
-exports.getUsuario = (req, res, next) =>{
-    const id = req.params.id_usuario
-    if(id === 'especial'){
-        res.status(200).send({
-            mensagem: 'Voce descobriu o ID especial',
-            id: id
-        });
-    }else {
-        res.status(200).send({
-            mensagem: 'Voce passou ID'
-        });
-    }
-}
-
 
 exports.patchUsuario = (req, res, next) =>{
     res.status(201).send({
@@ -117,9 +127,27 @@ exports.patchUsuario = (req, res, next) =>{
 }
 
 exports.deleteUsuario = (req, res, next) =>{
-    res.status(201).send({
-        mensagem: 'Delete dentro da rota de usuarios'
-    });
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});
+        }
+        conn.query(
+            'DELETE FROM usuario WHERE id_usuario =?',
+            [req.body.id_usuario],
+            (error, result, field) =>{
+                conn.release();
+                if(error){return res.status(500).send({error:error,response: null});}
+                const response = {
+                    mensagem: 'Usuario removido com sucesso',
+                    request:{
+                        tipo: 'POST',
+                        descricao: 'Exclui um Usuário',
+                        url:'http://localhost:3006/usuario/'
+                    }
+                }
+               return res.status(202).send({response});
+            }
+        )
+    })
 }
 
 
