@@ -3,6 +3,7 @@ const router = express.Router();
 const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const login = require('../middleware/login');
 //RETORNA TODOS USUARIOS
 exports.getUsuario = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
@@ -29,6 +30,7 @@ exports.getUsuario = (req, res, next) =>{
                         }
                     })
                 }
+                //console.log(response)
                 return res.status(200).send(response);
             }
         )
@@ -37,6 +39,7 @@ exports.getUsuario = (req, res, next) =>{
 
 //INSERE USUARIOS 
 exports.postUsuarioCad = (req, res, next) =>{
+    login.obrigatorio
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query('SELECT * FROM usuario WHERE email = ?', [req.body.email], (error, resultado)=>{
@@ -64,6 +67,7 @@ exports.postUsuarioCad = (req, res, next) =>{
                                    email: req.body.email
                                 }
                             }
+                            console.log(req.body.nome)
                             res.status(201).send({response});
                     })
                 })
@@ -77,9 +81,7 @@ exports.postUsuario = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error});}
         const query = 'SELECT * FROM usuario WHERE email = ?';
-      // console.log("teste");
-      // console.log(req.body.email);
-        //    console.log(req.body.senha);
+    
         conn.query(query, [req.body.email], (error, resultado, fields) =>{
             conn.release();
             if(error){return res.status(500).send({error:error});}
@@ -87,9 +89,6 @@ exports.postUsuario = (req, res, next) =>{
                // console.log('aquidd')
                 return res.status(401).send({mensagem: 'Falha na autenticação'})
             }
-           // console.log(resultado)
-          //  console.log(req.body.email);
-           // console.log(req.body.senha);
             bcrypt.compare(req.body.senha, resultado[0].senha,(err, resultado_senha)=>{
                 if(err){
                     //console.log('aqui1')
@@ -132,18 +131,19 @@ exports.deleteUsuario = (req, res, next) =>{
         }
         conn.query(
             'DELETE FROM usuario WHERE id_usuario =?',
-            [req.body.id_usuario],
+            [req.params.id_usuario],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     mensagem: 'Usuario removido com sucesso',
                     request:{
-                        tipo: 'POST',
+                        tipo: 'DELETE',
                         descricao: 'Exclui um Usuário',
                         url:'http://localhost:3006/usuario/'
                     }
                 }
+                
                return res.status(202).send({response});
             }
         )
