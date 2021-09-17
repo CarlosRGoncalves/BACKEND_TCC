@@ -36,6 +36,36 @@ exports.getUsuario = (req, res, next) =>{
         )
     });
 }
+exports.getUsuarioID = (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});}
+        conn.query(
+            'SELECT * FROM usuario where id_usuario = ?',
+            [req.params.id_usuario],
+            (error, result, field) =>{
+                conn.release();
+                if(error){return res.status(500).send({error:error,response: null});}
+                const response = {
+                    usuario: {                      
+                            nome: result[0].nome,
+                            email: result[0].email,
+                            telefone: result[0].telefone,
+                            tipo_usuario: result[0].tipo_usuario,
+                            request: {
+                                tipo: 'GET',
+                                descricao: 'Retorna o Usuario',
+                                url: 'http://localhost:3006/usuario/'
+                            }
+                        
+                    }
+                }
+                //console.log(response)
+                return res.status(200).send(response);
+            }
+        )
+    });
+}
+
 
 //INSERE USUARIOS 
 exports.postUsuarioCad = (req, res, next) =>{
@@ -119,10 +149,26 @@ exports.postUsuario = (req, res, next) =>{
     })
 }
 
-exports.patchUsuario = (req, res, next) =>{
-    res.status(201).send({
-        mensagem: 'Usuario alterado'
-    });
+exports.patchUsuario =(req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) =>{
+            if(error){return res.status(500).send({error:error,response: null});
+            }
+            conn.query(
+                'UPDATE usuario SET  nome = ?, email = ?,telefone = ?, tipo_usuario = ?, senha = ?  WHERE id_usuario =?',
+                [req.body.nome,req.body.email,req.body.telefone,req.body.tipo_usuario,hash,req.params.id_usuario],
+                (error, result, field) =>{
+                    conn.release();
+                    if(error){return res.status(500).send({error:error,response: null});}
+                    const response = {
+                        mensagem: 'Usuario atualizado com sucesso',
+                        
+                    }
+                    return res.status(200).send({response});
+                }
+            )
+        })
+    })
 }
 
 exports.deleteUsuario = (req, res, next) =>{
