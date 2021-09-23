@@ -2,27 +2,28 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
 //RETORNA TODOS AS PLANTAS
-exports.getPlanta =(req, res, next) =>{
+exports.getPlantio =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM planta',
+            'SELECT * FROM plantio',
             (error, result, field) =>{
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
-                    planta: result.map(tp_planta =>{
+                    plantio: result.map(tp_plantio =>{
                         return {
-                            id_planta: tp_planta.id_planta,
-                            id_tipo_planta: tp_planta.id_tipo_planta,
-                            descricao: tp_planta.descricao,
-                            epoca_plantio: tp_planta.epoca_plantio,
-                            forma_plantio: tp_planta.forma_plantio,
-                            tempo_colheita: tp_planta.tempo_colheita,
+                            id_plantio: tp_plantio.id_plantio,
+                            id_secao: tp_plantio.id_secao,
+                            id_planta: tp_plantio.id_planta,
+                            descricao: tp_plantio.descricao,
+                            quantidade: tp_plantio.quantidade,
+                            data_plantio: tp_plantio.data_plantio,
+                            valor_custo: tp_plantio.valor_custo,
                             request: {
                                 tipo: 'GET',
-                                descricao: 'Retorno de todos as plantas',
-                                url: 'http://localhost:3006/planta/' + tp_planta.id_planta
+                                descricao: 'Retorno de todos as plantios',
+                                url: 'http://localhost:3006/plantio/' + tp_plantio.id_plantio
                             }
                         }
                     })
@@ -34,29 +35,29 @@ exports.getPlanta =(req, res, next) =>{
 }
 
 //INSERE PLANTA 
-exports.postPlanta =(req, res, next) =>{
+exports.postPlantio =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO planta (id_tipo_planta,descricao,epoca_plantio,forma_plantio,tempo_colheita) VALUES (?,?,?,?,?)',
-            [req.body.id_tipo_planta,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita],
+            'INSERT INTO plantio (id_secao,id_planta,descricao,quantidade,data_plantio,valor_custo) VALUES (?,?,?,?,?,?)',
+            [req.body.id_secao,req.body.id_planta,req.body.descricao,req.body.quantidade,req.body.data_plantio,req.body.valor_custo],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta inserido com sucesso',
-                    plantaCriado: {
+                    mensagem: 'Tipo de plantio inserido com sucesso',
+                    plantioCriado: {
+                        id_secao: req.body.id_secao,
                         id_planta: req.body.id_planta,
-                        id_tipo_planta: req.body.id_tipo_planta,
                         descricao: req.body.descricao,
-                        epoca_plantio: req.body.epoca_plantio,
-                        forma_plantio: req.body.forma_plantio,
-                        tempo_colheita: req.body.tempo_colheita,
+                        quantidade: req.body.quantidade,
+                        data_plantio: req.body.data_plantio,
+                        valor_custo: req.body.valor_custo,
                         request: {
                             tipo: 'POST',
-                            descricao: 'Insere Planta',
-                            url: 'http://localhost:3006/planta'
+                            descricao: 'Insere Plantio',
+                            url: 'http://localhost:3006/plantio'
                         }
                     }
                 }
@@ -66,32 +67,33 @@ exports.postPlanta =(req, res, next) =>{
     })
 }
 // RETORNA OS DADOS DA PLANTA
-exports.getPlantaID =(req, res, next) =>{
+exports.getPlantioID =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM planta WHERE id_planta =?',
-            [req.params.id_planta],
+            'SELECT * FROM plantio WHERE id_plantio =?',
+            [req.params.id_plantio],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
                     return res.length(404).send({
-                        mensagem:' Não foi encontrado tipo de planta com este ID'
+                        mensagem:' Não foi encontrado tipo de plantio com este ID'
                     })
                 }
                 const response = {
-                    tipo_planta: {
+                    plantio: {
+                        id_plantio: result[0].id_plantio,
+                        id_secao: result[0].id_secao,
                         id_planta: result[0].id_planta,
-                        id_tipo_planta: result[0].id_tipo_planta,
                         descricao: result[0].descricao,
-                        epoca_plantio: result[0].epoca_plantio,
-                        forma_plantio: result[0].forma_plantio,
-                        tempo_colheita: result[0].tempo_colheita,
+                        quantidade: result[0].quantidade,
+                        data_plantio: result[0].data_plantio,
+                        valor_custo: result[0].valor_custo,
                         request: {
                             tipo: 'GET',
-                            descricao: 'Retorna os detalhes da Planta',
-                            url: 'http://localhost:3006/tipo_planta'
+                            descricao: 'Retorna os detalhes da Plantio',
+                            url: 'http://localhost:3006/tipo_plantio'
                         }
                     }
                 }
@@ -102,29 +104,29 @@ exports.getPlantaID =(req, res, next) =>{
 }
 
 
-exports.patchPlanta =(req, res, next) =>{
+exports.patchPlantio =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE planta SET  descricao = ?,epoca_plantio = ?, forma_plantio = ?, tempo_colheita = ? WHERE id_planta =?',
-            [req.body.nome,req.body.descricao,req.params.id_tipo_planta],
+            'UPDATE plantio SET  id_secao = ?,id_planta = ?, descricao = ?, quantidade = ?,data_plantio = ?,valor_custo = ? WHERE id_plantio =?',
+            [req.body.id_secao,req.body.id_planta,req.body.descricao,req.body.quantidade,req.body.data_plantio,req.body.valor_custo,req.params.id_plantio],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta atualizado com sucesso',
-                    plantaAtualizado: {
+                    mensagem: 'Plantio atualizado com sucesso',
+                    plantioAtualizado: {
+                        id_secao: req.body.id_secao,
                         id_planta: req.body.id_planta,
-                        id_tipo_planta: req.body.id_tipo_planta,
                         descricao: req.body.descricao,
-                        epoca_plantio: req.body.epoca_plantio,
-                        forma_plantio: req.body.forma_plantio,
-                        tempo_colheita: req.body.tempo_colheita,
+                        quantidade: req.body.quantidade,
+                        data_plantio: req.body.data_plantio,
+                        valor_custo: req.body.valor_custo,
                         request: {
                             tipo: 'PATCH',
-                            descricao: 'Altera Tipo de Planta',
-                            url: 'http://localhost:3006/tipo_planta/' + req.body.id_tipo_planta
+                            descricao: 'Altera Plantio',
+                            url: 'http://localhost:3006/tipo_plantio/' + req.body.id_plantio
                         }
                     }
                 }
@@ -134,22 +136,22 @@ exports.patchPlanta =(req, res, next) =>{
     })
 }
 
-exports.deletePlanta =(req, res, next) =>{
+exports.deletePlantio =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'DELETE FROM planta WHERE id_planta =?',
-            [req.params.id_planta],
+            'DELETE FROM plantio WHERE id_plantio =?',
+            [req.params.id_plantio],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta removido com sucesso',
+                    mensagem: 'Plantio removido com sucesso',
                     request:{
-                        tipo: 'POST',
-                        descriucao: 'insere um tipo de planta',
-                        url:'http://localhost:3006/tipo_planta/'
+                        tipo: 'DELETE',
+                        descriucao: 'insere um tipo de plantio',
+                        url:'http://localhost:3006/tipo_plantio/'
                     }
                 }
                return res.status(202).send({response});

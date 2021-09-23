@@ -61,7 +61,7 @@ exports.posttipo_planta =(req, res, next) =>{
     })
 }
 // RETORNA OS DADOS DE UM TIPO DE PLANTA
-exports.gettipo_planta =(req, res, next) =>{
+exports.gettipo_plantaID =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
@@ -100,7 +100,7 @@ exports.patchtipo_planta =(req, res, next) =>{
         }
         conn.query(
             'UPDATE tipo_planta SET nome = ?, descricao = ? WHERE id_tipo_plantas =?',
-            [req.body.nome,req.body.descricao,req.body.id_tipo_planta],
+            [req.body.nome,req.body.descricao,req.params.id_tipo_planta],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -129,7 +129,7 @@ exports.deletetipo_planta =(req, res, next) =>{
         }
         conn.query(
             'DELETE FROM tipo_planta WHERE id_tipo_plantas =?',
-            [req.body.id_tipo_planta],
+            [req.params.id_tipo_planta],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}

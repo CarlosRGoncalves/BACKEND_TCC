@@ -56,7 +56,7 @@ exports.getCliente = (req, res, next) =>{
     });
 }
 // RETORNA OS DADOS DE UM CLIENTE
-exports.getCliente2 = (req, res, next) =>{
+exports.getClienteID = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
@@ -97,7 +97,7 @@ exports.patchCliente = (req, res, next) =>{
         }
         conn.query(
             'UPDATE cliente SET  nome = ?, email = ?, telefone = ?, cpf =?, endereco =? WHERE id_cliente =?',
-            [req.body.nome,req.body.email,req.body.telefone,req.body.cpf,req.body.endereco],
+            [req.body.nome,req.body.email,req.body.telefone,req.body.cpf,req.body.endereco,req.params.id_cliente],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -127,7 +127,7 @@ exports.deleteCliente = (req, res, next) =>{
         }
         conn.query(
             'DELETE FROM cliente WHERE id_cliente =?',
-            [req.body.id_cliente],
+            [req.params.id_cliente],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}

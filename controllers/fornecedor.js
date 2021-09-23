@@ -1,27 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
-//RETORNA TODOS OD TIPOS DE PLANTAS
-exports.getSecao = (req, res, next) =>{
+//RETORNA TODOS AS PLANTAS
+exports.getFornecedor =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM secao',
+            'SELECT * FROM fornecedor',
             (error, result, field) =>{
-                conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
-                    secao: result.map(tp_secao =>{
+                    fornecedor: result.map(tp_fornecedor =>{
                         return {
-                            id_secao: tp_secao.id_secao,
-                            id_usuario: tp_secao.id_usuario,
-                            descricao: tp_secao.descricao,
-                            area: tp_secao.area,
+                            id_fornecedor: tp_fornecedor.id_fornecedor,
+                            nome: tp_fornecedor.nome,
+                            cnpj: tp_fornecedor.cnpj,
                             request: {
                                 tipo: 'GET',
-                                descricao: 'Retorno de todos os tipos de secões',
-                                url: 'http://localhost:3006/secao/' + tp_secao.id_secao
+                                descricao: 'Retorno de todos fornecedores',
+                                url: 'http://localhost:3006/fornecedor/' + tp_fornecedor.id_fornecedor
                             }
                         }
                     })
@@ -32,28 +30,26 @@ exports.getSecao = (req, res, next) =>{
     });
 }
 
-//INSERE SECAO 
-exports.postSecao = (req, res, next) =>{
-    console.log(req.usuario)
+//INSERE PLANTA 
+exports.postFornecedor =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO secao (id_usuario,descricao,area) VALUES (?,?,?)',
-            [req.body.id_usuario,req.body.descricao,req.body.area],
+            'INSERT INTO fornecedor (nome,cnpj) VALUES (?,?)',
+            [req.body.nome,req.body.cnpj],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta inserido com sucesso',
-                    secaoCriado: {
-                        usuario: req.body.id_usuario,
-                        descricao: req.body.descricao,
-                        area: req.body.area,
+                    mensagem: 'Fornecedor inserido com sucesso',
+                    fornecedorCriado: {
+                        nome: req.body.nome,
+                        cnpj: req.body.cnpj,
                         request: {
                             tipo: 'POST',
-                            descricao: 'Insere Secao',
-                            url: 'http://localhost:3006/secao'
+                            descricao: 'Insere Fornecedor',
+                            url: 'http://localhost:3006/fornecedor'
                         }
                     }
                 }
@@ -62,30 +58,30 @@ exports.postSecao = (req, res, next) =>{
         )
     })
 }
-// RETORNA OS DADOS DE UM TIPO DE PLANTA
-exports.getSecaoID = (req, res, next) =>{
+// RETORNA OS DADOS DA PLANTA
+exports.getFornecedorID =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM secao WHERE id_secao =?',
-            [req.params.id_secao],
+            'SELECT * FROM fornecedor WHERE id_fornecedor =?',
+            [req.params.id_fornecedor],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
-                    return res.status(404).send({
-                        mensagem:' Não foi encontrado tipo de planta com este ID'
+                    return res.length(404).send({
+                        mensagem:' Não foi encontrado tipo de fornecedor com este ID'
                     })
                 }
                 const response = {
-                    tipo_planta: {
-                        id_usuario: result[0].id_usuario,
-                        descricao: result[0].descricao,
-                        area: result[0].area,
+                    fornecedor: {
+                        id_fornecedor: result[0].id_fornecedor,
+                        nome: result[0].nome,
+                        cnpj: result[0].cnpj,
                         request: {
                             tipo: 'GET',
-                            descricao: 'Retorna os detalhes do Tipo de Planta',
-                            url: 'http://localhost:3006/Secao'
+                            descricao: 'Retorna os detalhes dos Fornecedores',
+                            url: 'http://localhost:3006/fornecedor'
                         }
                     }
                 }
@@ -96,26 +92,26 @@ exports.getSecaoID = (req, res, next) =>{
 }
 
 
-exports.patchSecao =(req, res, next) =>{
+exports.patchFornecedor =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE secao SET  descricao = ?, area = ? WHERE id_secao =?',
-            [req.body.descricao,req.body.area,req.body.id_secao],
+            'UPDATE fornecedor SET  nome = ?,cnpj= ? WHERE id_fornecedor =?',
+            [req.body.nome,req.body.cnpj,req.params.id_fornecedor],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta atualizado com sucesso',
-                    tipo_plantaAtualizado: {
-                        id_usuario: req.body.id_usuario,
-                        descricao: req.body.descricao,
-                        area: req.body.area,
+                    mensagem: 'Pragas e doencas atualizado com sucesso',
+                    fornecedorAtualizado: {
+                        id_fornecedor: req.body.id_fornecedor,
+                        nome: req.body.nome,
+                        cnpj: req.body.cnpj,
                         request: {
                             tipo: 'PATCH',
-                            descricao: 'Altera Secao',
-                            url: 'http://localhost:3006/secao/' + req.body.id_secao
+                            descricao: 'Altera Fornecedor',
+                            url: 'http://localhost:3006/fornecedor/' + req.body.id_fornecedor
                         }
                     }
                 }
@@ -125,22 +121,22 @@ exports.patchSecao =(req, res, next) =>{
     })
 }
 
-exports.deleteSecao = (req, res, next) =>{
+exports.deleteFornecedor =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'DELETE FROM tipo_planta WHERE id_secao =?',
-            [req.body.id_tipo_planta],
+            'DELETE FROM fornecedor WHERE id_fornecedor =?',
+            [req.params.id_fornecedor],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Secao removido com sucesso',
+                    mensagem: 'Fornecedor removido com sucesso',
                     request:{
-                        tipo: 'POST',
-                        descriucao: 'insere um tipo de planta',
-                        url:'http://localhost:3006/secao/'
+                        tipo: 'DELETE',
+                        descriucao: 'insere uma fornecedor',
+                        url:'http://localhost:3006/fornecedor/'
                     }
                 }
                return res.status(202).send({response});
@@ -148,4 +144,5 @@ exports.deleteSecao = (req, res, next) =>{
         )
     })
 }
+
 
