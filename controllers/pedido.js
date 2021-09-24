@@ -81,7 +81,7 @@ exports.postPedido = (req, res, next) =>{
         conn.query('SELECT * FROM produto_final WHERE id_produto_final = ?', [req.body.id_produto_final], (error, resultado)=>{
             if(error){return res.status(500).send({error:error,response: null});}
             if(resultado.length==0){
-            return  res.status(409).send({mensagem: 'Produto não Encontrado'});
+                return  res.status(409).send({mensagem: 'Produto não Encontrado'});
             }else{  
                 console.log("ENTROU")
                     console.log(resultado)
@@ -127,7 +127,7 @@ exports.patchPedido =(req, res, next) =>{
                     const valor_final = (resultado[0].valor)*(req.body.quantidade);
                     conn.query(
                         'UPDATE pedido SET id_produto_final,id_cliente,status,descricao,quantidade,valor,data WHERE id_pedido =?',
-                        [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,req.body.quantidade,valor_final,req.body.data
+                        [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,req.body.quantidade,valor_final,req.body.data,req.body.id_pedido
                         ],
                         (error, result, field) =>{
                             conn.release();
