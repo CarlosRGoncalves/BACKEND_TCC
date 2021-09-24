@@ -74,7 +74,7 @@ exports.postUsuarioCad = (req, res, next) =>{
         conn.query('SELECT * FROM usuario WHERE email = ?', [req.body.email], (error, resultado)=>{
             if(error){return res.status(500).send({error:error,response: null});}
             if(resultado.length>0){
-            return  res.status(409).send({mensagem: 'Usuário já Cadastrado'});
+            return  res.status(409).send({mensagem: 'Usuário com E-mail já Cadastrado'});
             }else{
                 bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) =>{
                     if(errBcrypt){return res.status(500).send({error:errBcrypt});}

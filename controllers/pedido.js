@@ -50,10 +50,14 @@ exports.getPedidoID = (req, res, next) =>{
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     pedido: {                      
+                            id_pedido: result[0].id_pedido,
                             id_produto_final: result[0].id_produto_final,
                             id_cliente: result[0].id_cliente,
                             status: result[0].status,
                             descricao: result[0].descricao,
+                            quantidade: result[0].quantidade,
+                            valor: result[0].valor,
+                            data: result[0].data,
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorna o Pedido',
@@ -71,21 +75,23 @@ exports.getPedidoID = (req, res, next) =>{
 
 
 //INSERE USUARIOS 
-exports.postPedidoCad = (req, res, next) =>{
-    login.obrigatorio
+exports.postPedido = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
-        conn.query('SELECT * FROM pedido WHERE id_cliente = ?', [req.body.id_cliente], (error, resultado)=>{
+        conn.query('SELECT * FROM produto_final WHERE id_produto_final = ?', [req.body.id_produto_final], (error, resultado)=>{
             if(error){return res.status(500).send({error:error,response: null});}
-            if(resultado.length>0){
-                res.status(409).send({mensage: 'Usuário já Cadastrado'});
-            }else{
-                bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) =>{
-                    if(errBcrypt){return res.status(500).send({error:errBcrypt});}
+            if(resultado.length==0){
+            return  res.status(409).send({mensagem: 'Produto não Encontrado'});
+            }else{  
+                console.log("ENTROU")
+                    console.log(resultado)
+                    const valor_final = (resultado[0].valor)*(req.body.quantidade);
+                    console.log(valor_final)
                     conn.query(
-                        'INSERT INTO pedido (id_produto_final,id_cliente,status,descricao,senha) VALUES (?,?,?,?,?)',
-                        [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,hash],
-                        (error, resultado, field) =>{
+                        'INSERT INTO pedido (id_produto_final,id_cliente,status,descricao,quantidade,valor,data) VALUES (?,?,?,?,?,?,?)',
+                        [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,req.body.quantidade,valor_final,req.body.data
+                        ],
+                        (error, result, field) =>{
                             conn.release();
                             if(error){
                                 return res.status(500).send({
@@ -94,82 +100,55 @@ exports.postPedidoCad = (req, res, next) =>{
                                 });
                             }
                             response = {
-                                mensagem: 'Pedido criado com sucesso',
-                                pedidoCriado: {
-                                   id_pedido: resultado.insertId,
+                                mensagem: 'Usuario criado com sucesso',
+                                usuarioCriado: {
+                                   id_usuario: result.insertId,
                                    id_cliente: req.body.id_cliente
                                 }
                             }
-                            console.log(req.body.id_produto_final)
+                            //console.log(req.body.nome)
                             res.status(201).send({response});
                     })
-                })
+               
             }
         })
     })
 }
 
-exports.postPedido = (req, res, next) =>{
-  //  console.log("SDFSDSD");
-    mysql.getConnection((error, conn) =>{
-        if(error){return res.status(500).send({error:error});}
-        const query = 'SELECT * FROM pedido WHERE id_cliente = ?';
-    
-        conn.query(query, [req.body.id_cliente], (error, resultado, fields) =>{
-            conn.release();
-            if(error){return res.status(500).send({error:error});}
-            if(resultado.length<1){
-               // console.log('aquidd')
-                return res.status(401).send({mensagem: 'Falha na autenticação'})
-            }
-            bcrypt.compare(req.body.senha, resultado[0].senha,(err, resultado_senha)=>{
-                if(err){
-                    //console.log('aqui1')
-                    return res.status(401).send({ mensagem: 'Falha na autenticação' })
-                }
-                if(resultado_senha){
-                    const token = jwt.sign({
-                        id_pedido: resultado[0].id_pedido,
-                        id_produto_final: resultado[0].id_produto_final,
-                        id_cliente: resultado[0].id_cliente,
-                        descricao: resultado[0].descricao
-                    }, 
-                    process.env.JWT_KEY, 
-                    {
-                        expiresIn: "1h"
-                    });
-                    //console.log('Sucesso')
-                    return res.status(200).send({ 
-                        mensagem: 'Autenticado com sucesso',
-                        token: token
-                    })
-                }
-                //console.log('aqui')
-                return res.status(401).send({ mensagem: 'Falha na autenticação' })
-            })
-        })
-      
-    })
-}
 
 exports.patchPedido =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
-        bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) =>{
-            if(error){return res.status(500).send({error:error,response: null});
+        if(error){return res.status(500).send({error:error,response: null});}
+        conn.query('SELECT valor FROM produto_final WHERE id_produto_final = ?', [req.body.id_produto_final], (error, resultado)=>{
+            if(error){return res.status(500).send({error:error,response: null});}
+            if(resultado.length>0){
+            return  res.status(409).send({mensagem: 'Produto não Encontrado'});
+            }else{  
+                    const valor_final = (resultado[0].valor)*(req.body.quantidade);
+                    conn.query(
+                        'UPDATE pedido SET id_produto_final,id_cliente,status,descricao,quantidade,valor,data WHERE id_pedido =?',
+                        [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,req.body.quantidade,valor_final,req.body.data
+                        ],
+                        (error, result, field) =>{
+                            conn.release();
+                            if(error){
+                                return res.status(500).send({
+                                    error:error,
+                                    response: null
+                                });
+                            }
+                            response = {
+                                mensagem: 'Usuario criado com sucesso',
+                                usuarioCriado: {
+                                   id_usuario: result.insertId,
+                                   id_cliente: req.body.id_cliente
+                                }
+                            }
+                            //console.log(req.body.nome)
+                            res.status(201).send({response});
+                    })
+               
             }
-            conn.query(
-                'UPDATE pedido SET  id_produto_final = ?, id_cliente = ?,status = ?, descricao = ?, senha = ?  WHERE id_pedido =?',
-                [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,hash,req.params.id_pedido],
-                (error, result, field) =>{
-                    conn.release();
-                    if(error){return res.status(500).send({error:error,response: null});}
-                    const response = {
-                        mensagem: 'Pedido atualizado com sucesso',
-                        
-                    }
-                    return res.status(200).send({response});
-                }
-            )
         })
     })
 }

@@ -15,6 +15,7 @@ const rotaFornecedor = require('./routes/fornecedor');
 const rotaInsumo = require('./routes/insumo');
 const rotaColheita = require('./routes/colheita');
 const rotaProduto_final = require('./routes/produto_final');
+const rotaPedido = require('./routes/pedido');
 const rotaMiddleware = require('./middleware/login');
 
 app.use(cors());
@@ -45,6 +46,7 @@ app.use('/fornecedor',rotaFornecedor);
 app.use('/insumo',rotaInsumo);
 app.use('/colheita',rotaColheita);
 app.use('/produto_final',rotaProduto_final);
+app.use('/pedido',rotaPedido);
 app.use('/validaToken',rotaMiddleware.obrigatorio,(req,res) =>{
     res.status(200).send({});
 });
