@@ -167,7 +167,7 @@ exports.deletePedido = (req, res, next) =>{
                     mensagem: 'Pedido removido com sucesso',
                     request:{
                         tipo: 'DELETE',
-                        descricao: 'Exclui um Usuário',
+                        descricao: 'Exclui um Pedido',
                         url:'http://localhost:3006/pedido/'
                     }
                 }
