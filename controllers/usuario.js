@@ -90,7 +90,7 @@ exports.postUsuarioCad = (req, res, next) =>{
                                 });
                             }
                             response = {
-                                mensagem: 'Usuario criado com sucesso',
+                                mensagem: 'Usuario criado com sucesso!!!',
                                 usuarioCriado: {
                                    id_usuario: result.insertId,
                                    email: req.body.email
@@ -160,10 +160,10 @@ exports.patchUsuario =(req, res, next) =>{
                     conn.release();
                     if(error){return res.status(500).send({error:error,response: null});}
                     const response = {
-                        mensagem: 'Usuario atualizado com sucesso',
+                        mensagem: 'Usuario atualizado com sucesso!!!',
                         
                     }
-                    return res.status(200).send({response});
+                    return res.status(202).send({response});
                 }
             )
         })

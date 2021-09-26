@@ -83,10 +83,9 @@ exports.postPedido = (req, res, next) =>{
             if(resultado.length==0){
                 return  res.status(409).send({mensagem: 'Produto não Encontrado'});
             }else{  
-                console.log("ENTROU")
-                    console.log(resultado)
+                   // console.log(resultado)
                     const valor_final = (resultado[0].valor)*(req.body.quantidade);
-                    console.log(valor_final)
+                   // console.log(valor_final)
                     conn.query(
                         'INSERT INTO pedido (id_produto_final,id_cliente,status,descricao,quantidade,valor,data) VALUES (?,?,?,?,?,?,?)',
                         [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,req.body.quantidade,valor_final,req.body.data

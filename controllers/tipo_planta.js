@@ -11,16 +11,16 @@ exports.gettipo_planta =(req, res, next) =>{
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
-                    tipo_plantas: result.map(tp_plantas =>{
+                    tipo_planta: result.map(tp_plantas =>{
                         return {
-                            id_tipo_planta: tp_plantas.id_tipo_plantas,
+                            id_tipo_planta: tp_plantas.id_tipo_planta,
                             id_usuario: tp_plantas.id_usuario,
                             nome: tp_plantas.nome,
                             descricao: tp_plantas.descricao,
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos os tipos de plantas',
-                                url: 'http://localhost:3006/tipo_planta/' + tp_plantas.id_tipo_plantas
+                                url: 'http://localhost:3006/tipo_planta/' + tp_plantas.id_tipo_planta
                             }
                         }
                     })
@@ -43,9 +43,9 @@ exports.posttipo_planta =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta inserido com sucesso',
+                    mensagem: 'Tipo de planta cadastrado com sucesso!!!',
                     tipo_plantaCriado: {
-                        usuario: req.body.id_usuario,
+                        id_usuario: req.body.id_usuario,
                         nome: req.body.nome,
                         descricao: req.body.descricao,
                         request: {
@@ -65,7 +65,7 @@ exports.gettipo_plantaID =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM tipo_planta WHERE id_tipo_plantas =?',
+            'SELECT * FROM tipo_planta WHERE id_tipo_planta =?',
             [req.params.id_tipo_planta],
             (error, result, field) =>{
                 conn.release();
@@ -77,7 +77,7 @@ exports.gettipo_plantaID =(req, res, next) =>{
                 }
                 const response = {
                     tipo_planta: {
-                        usuario: result[0].id_usuario,
+                        id_usuario: result[0].id_usuario,
                         nome: result[0].nome,
                         descricao: result[0].descricao,
                         request: {
@@ -99,15 +99,15 @@ exports.patchtipo_planta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE tipo_planta SET nome = ?, descricao = ? WHERE id_tipo_plantas =?',
+            'UPDATE tipo_planta SET nome = ?, descricao = ? WHERE id_tipo_planta =?',
             [req.body.nome,req.body.descricao,req.params.id_tipo_planta],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta atualizado com sucesso',
+                    mensagem: 'Tipo de planta atualizado com sucesso!!!',
                     tipo_plantaAtualizado: {
-                        usuario: req.body.id_usuario,
+                        id_usuario: req.body.id_usuario,
                         nome: req.body.nome,
                         descricao: req.body.descricao,
                         request: {
@@ -128,7 +128,7 @@ exports.deletetipo_planta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'DELETE FROM tipo_planta WHERE id_tipo_plantas =?',
+            'DELETE FROM tipo_planta WHERE id_tipo_planta =?',
             [req.params.id_tipo_planta],
             (error, result, field) =>{
                 conn.release();

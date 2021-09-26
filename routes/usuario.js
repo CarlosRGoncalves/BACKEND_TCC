@@ -7,7 +7,7 @@ const UsuarioControlller = require('../controllers/usuario');
 router.get('/',login.obrigatorio, UsuarioControlller.getUsuario);
 router.post('/cadastro',  UsuarioControlller.postUsuarioCad);
 router.post('/login',UsuarioControlller.postUsuario);
-router.get('/:id_usuario', UsuarioControlller.getUsuarioID)
+router.get('/:id_usuario',login.obrigatorio, UsuarioControlller.getUsuarioID)
 router.patch('/:id_usuario', UsuarioControlller.patchUsuario);
 router.delete('/:id_usuario',login.obrigatorio, UsuarioControlller.deleteUsuario);
 module.exports = router;
