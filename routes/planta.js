@@ -5,8 +5,8 @@ const login = require('../middleware/login');
 const PlantaController = require('../controllers/planta');
 //RETORNA TODOS OD TIPOS DE PLANTAS
 router.get('/',login.obrigatorio, PlantaController.getPlanta);
-router.post('/',login.obrigatorio, PlantaController.postPlanta);
+router.post('/', PlantaController.postPlanta);
 router.get('/:id_planta',login.obrigatorio, PlantaController.getPlantaID)
-router.patch('/:id_planta',login.obrigatorio, PlantaController.patchPlanta);
+router.patch('/:id_planta', PlantaController.patchPlanta);
 router.delete('/:id_planta',login.obrigatorio, PlantaController.deletePlanta);
 module.exports = router;

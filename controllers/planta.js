@@ -45,7 +45,7 @@ exports.postPlanta =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta inserido com sucesso',
+                    mensagem: 'Planta cadastrada com sucesso!!!',
                     plantaCriado: {
                         id_planta: req.body.id_planta,
                         id_tipo_planta: req.body.id_tipo_planta,
@@ -76,12 +76,12 @@ exports.getPlantaID =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
-                    return res.length(404).send({
+                    return res.status(404).send({
                         mensagem:' Não foi encontrado tipo de planta com este ID'
                     })
                 }
                 const response = {
-                    tipo_planta: {
+                    planta: {
                         id_planta: result[0].id_planta,
                         id_tipo_planta: result[0].id_tipo_planta,
                         descricao: result[0].descricao,
@@ -107,15 +107,14 @@ exports.patchPlanta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE planta SET  descricao = ?,epoca_plantio = ?, forma_plantio = ?, tempo_colheita = ? WHERE id_planta =?',
-            [req.body.nome,req.body.descricao,req.params.id_tipo_planta],
+            'UPDATE planta SET  id_tipo_planta = ?,descricao = ?,epoca_plantio = ?, forma_plantio = ?, tempo_colheita = ? WHERE id_planta =?',
+            [req.body.id_tipo_planta,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita,req.params.id_planta],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta atualizado com sucesso',
+                    mensagem: 'Planta atualizada com sucesso!!!',
                     plantaAtualizado: {
-                        id_planta: req.body.id_planta,
                         id_tipo_planta: req.body.id_tipo_planta,
                         descricao: req.body.descricao,
                         epoca_plantio: req.body.epoca_plantio,
@@ -123,8 +122,8 @@ exports.patchPlanta =(req, res, next) =>{
                         tempo_colheita: req.body.tempo_colheita,
                         request: {
                             tipo: 'PATCH',
-                            descricao: 'Altera Tipo de Planta',
-                            url: 'http://localhost:3006/tipo_planta/' + req.body.id_tipo_planta
+                            descricao: 'Altera Planta',
+                            url: 'http://localhost:3006/planta/' + req.body.id_planta
                         }
                     }
                 }
@@ -145,7 +144,7 @@ exports.deletePlanta =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de planta removido com sucesso',
+                    mensagem: 'Planta removido com sucesso',
                     request:{
                         tipo: 'POST',
                         descriucao: 'insere um tipo de planta',
