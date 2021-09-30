@@ -42,7 +42,7 @@ exports.postPragas_doenca =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pragas_doenca inserido com sucesso',
+                    mensagem: 'Pragas/Doencas cadastradas com sucesso!!!',
                     pragas_doencaCriado: {
                         nome: req.body.nome,
                         descricao: req.body.descricao,
@@ -69,7 +69,7 @@ exports.getPragas_doencaID =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
-                    return res.length(404).send({
+                    return res.status(404).send({
                         mensagem:' Não foi encontrado tipo de pragas_doenca com este ID'
                     })
                 }
@@ -103,7 +103,7 @@ exports.patchPragas_doenca =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pragas e doencas atualizado com sucesso',
+                    mensagem: 'Pragas/Doenças atualizado com sucesso!!!',
                     pragas_doencaAtualizado: {
                         id_p_doenca: req.body.id_p_doenca,
                         nome: req.body.nome,
@@ -132,7 +132,7 @@ exports.deletePragas_doenca =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pragas_doenca removido com sucesso',
+                    mensagem: 'Pragas/Doenças removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'insere uma pragas_doenca',

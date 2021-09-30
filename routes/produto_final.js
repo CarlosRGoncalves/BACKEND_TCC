@@ -5,8 +5,8 @@ const login = require('../middleware/login');
 const Produto_finalController = require('../controllers/produto_final');
 //RETORNA TODOS OD TIPOS DE ProducaoS
 router.get('/',login.obrigatorio, Produto_finalController.getProduto_final);
-router.post('/',login.obrigatorio, Produto_finalController.postProduto_final);
+router.post('/', Produto_finalController.postProduto_final);
 router.get('/:id_produto_final',login.obrigatorio, Produto_finalController.getProduto_finalID)
-router.patch('/:id_produto_final',login.obrigatorio, Produto_finalController.patchProduto_final);
+router.patch('/:id_produto_final',Produto_finalController.patchProduto_final);
 router.delete('/:id_produto_final',login.obrigatorio, Produto_finalController.deleteProduto_final);
 module.exports = router;

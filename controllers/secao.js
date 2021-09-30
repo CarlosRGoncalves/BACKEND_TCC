@@ -65,7 +65,6 @@ exports.postSecao = (req, res, next) =>{
 }
 // RETORNA OS DADOS DE UM TIPO DE PLANTA
 exports.getSecaoID = (req, res, next) =>{
-    console.log("ENTROU")
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(

@@ -8,6 +8,7 @@ exports.getPlanta =(req, res, next) =>{
         conn.query(
             'SELECT * FROM planta',
             (error, result, field) =>{
+                conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
@@ -15,6 +16,7 @@ exports.getPlanta =(req, res, next) =>{
                         return {
                             id_planta: tp_planta.id_planta,
                             id_tipo_planta: tp_planta.id_tipo_planta,
+                            nome: tp_planta.nome,
                             descricao: tp_planta.descricao,
                             epoca_plantio: tp_planta.epoca_plantio,
                             forma_plantio: tp_planta.forma_plantio,
@@ -39,16 +41,16 @@ exports.postPlanta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO planta (id_tipo_planta,descricao,epoca_plantio,forma_plantio,tempo_colheita) VALUES (?,?,?,?,?)',
-            [req.body.id_tipo_planta,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita],
+            'INSERT INTO planta (id_tipo_planta,nome,descricao,epoca_plantio,forma_plantio,tempo_colheita) VALUES (?,?,?,?,?,?)',
+            [req.body.id_tipo_planta,req.body.nome,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     mensagem: 'Planta cadastrada com sucesso!!!',
                     plantaCriado: {
-                        id_planta: req.body.id_planta,
                         id_tipo_planta: req.body.id_tipo_planta,
+                        nome: req.body.nome,
                         descricao: req.body.descricao,
                         epoca_plantio: req.body.epoca_plantio,
                         forma_plantio: req.body.forma_plantio,
@@ -84,6 +86,7 @@ exports.getPlantaID =(req, res, next) =>{
                     planta: {
                         id_planta: result[0].id_planta,
                         id_tipo_planta: result[0].id_tipo_planta,
+                        nome: result[0].nome,
                         descricao: result[0].descricao,
                         epoca_plantio: result[0].epoca_plantio,
                         forma_plantio: result[0].forma_plantio,
@@ -107,8 +110,8 @@ exports.patchPlanta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE planta SET  id_tipo_planta = ?,descricao = ?,epoca_plantio = ?, forma_plantio = ?, tempo_colheita = ? WHERE id_planta =?',
-            [req.body.id_tipo_planta,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita,req.params.id_planta],
+            'UPDATE planta SET  id_tipo_planta = ?,nome = ?,descricao = ?,epoca_plantio = ?, forma_plantio = ?, tempo_colheita = ? WHERE id_planta =?',
+            [req.body.id_tipo_planta, req.body.nome,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita,req.params.id_planta],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -116,6 +119,7 @@ exports.patchPlanta =(req, res, next) =>{
                     mensagem: 'Planta atualizada com sucesso!!!',
                     plantaAtualizado: {
                         id_tipo_planta: req.body.id_tipo_planta,
+                        nome: req.body.nome,
                         descricao: req.body.descricao,
                         epoca_plantio: req.body.epoca_plantio,
                         forma_plantio: req.body.forma_plantio,
@@ -144,7 +148,7 @@ exports.deletePlanta =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Planta removido com sucesso',
+                    mensagem: 'Planta removida com sucesso!!!',
                     request:{
                         tipo: 'POST',
                         descriucao: 'insere um tipo de planta',

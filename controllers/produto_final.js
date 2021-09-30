@@ -8,12 +8,14 @@ exports.getProduto_final =(req, res, next) =>{
         conn.query(
             'SELECT * FROM produto_final',
             (error, result, field) =>{
+                conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
                     produto_final: result.map(tp_produto_final =>{
                         return {
                             id_produto_final: tp_produto_final.id_produto_final,
+                            nome: tp_produto_final.nome,
                             descricao: tp_produto_final.descricao,
                             medida: tp_produto_final.medida,
                             valor: tp_produto_final.valor,
@@ -37,14 +39,16 @@ exports.postProduto_final =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO produto_final (descricao,medida,valor) VALUES (?,?,?)',
-            [req.body.descricao,req.body.medida,req.body.valor],
+            'INSERT INTO produto_final (nome,descricao,medida,valor) VALUES (?,?,?,?)',
+            [req.body.nome,req.body.descricao,req.body.medida,req.body.valor],
             (error, result, field) =>{
                 conn.release();
+                console.log(error)
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Produto_final inserido com sucesso',
+                    mensagem: 'Produto Final cadastrado com sucesso!!!',
                     produto_finalCriado: {
+                        nome: req.body.nome,
                         descricao: req.body.descricao,
                         medida: req.body.medida,
                         valor: req.body.valor,
@@ -72,17 +76,18 @@ exports.getProduto_finalID =(req, res, next) =>{
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
                     return res.length(404).send({
-                        mensagem:' Não foi encontrado tipo de produto_final com este ID'
+                        mensagem:' Não foi encontrado tipo de Produto Final com este ID!!!'
                     })
                 }
                 const response = {
                     produto_final: {
+                        nome: result[0].nome,
                         descricao: result[0].descricao,
                         medida: result[0].medida,
                         valor: result[0].valor,
                         request: {
                             tipo: 'GET',
-                            medida: 'Retorna os detalhes da Produto final',
+                            medida: 'Retorna os detalhes da Produto Final',
                             url: 'http://localhost:3006/produto_final'
                         }
                     }
@@ -99,17 +104,18 @@ exports.patchProduto_final =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE produto_final SET  descricao = ?,medida= ?,valor = ? WHERE id_produto_final =?',
-            [req.body.descricao,req.body.medida,req.body.valor,req.params.id_produto_final],
+            'UPDATE produto_final SET  nome = ?, descricao = ?,medida= ?,valor = ? WHERE id_produto_final =?',
+            [req.body.nome,req.body.descricao,req.body.medida,req.body.valor,req.params.id_produto_final],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pragas e doencas atualizado com sucesso',
+                    mensagem: 'Produto Final atualizado com sucesso!!!',
                     produto_finalAtualizado: {
+                        nome: req.body.nome,
                         descricao: req.body.descricao,
                         medida: req.body.medida,
-                        valor: req.body.medida,
+                        valor: req.body.valor,
                         request: {
                             tipo: 'PATCH',
                             medida: 'Altera Produto_final',
@@ -134,7 +140,7 @@ exports.deleteProduto_final =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Produto_final removido com sucesso',
+                    mensagem: 'Produto Final removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'Deleta uma produto_final',

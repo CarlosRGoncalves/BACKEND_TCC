@@ -72,9 +72,10 @@ exports.postUsuarioCad = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query('SELECT * FROM usuario WHERE email = ?', [req.body.email], (error, resultado)=>{
+            conn.release();
             if(error){return res.status(500).send({error:error,response: null});}
             if(resultado.length>0){
-            return  res.status(409).send({mensagem: 'Usuário com E-mail já Cadastrado'});
+            return  res.status(409).send({mensagem: 'Usuário com esse E-mail já Cadastrado!!!'});
             }else{
                 bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) =>{
                     if(errBcrypt){return res.status(500).send({error:errBcrypt});}
@@ -181,7 +182,7 @@ exports.deleteUsuario = (req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Usuario removido com sucesso',
+                    mensagem: 'Usuario removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
                         descricao: 'Exclui um Usuário',

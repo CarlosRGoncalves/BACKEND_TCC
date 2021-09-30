@@ -8,6 +8,7 @@ exports.getFornecedor =(req, res, next) =>{
         conn.query(
             'SELECT * FROM fornecedor',
             (error, result, field) =>{
+                conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
@@ -42,7 +43,7 @@ exports.postFornecedor =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Fornecedor inserido com sucesso',
+                    mensagem: 'Fornecedor cadastrado com sucesso!!!',
                     fornecedorCriado: {
                         nome: req.body.nome,
                         cnpj: req.body.cnpj,
@@ -70,7 +71,7 @@ exports.getFornecedorID =(req, res, next) =>{
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
                     return res.length(404).send({
-                        mensagem:' Não foi encontrado tipo de fornecedor com este ID'
+                        mensagem:' Não foi encontrado tipo de fornecedor com este ID!!!'
                     })
                 }
                 const response = {
@@ -103,7 +104,7 @@ exports.patchFornecedor =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pragas e doencas atualizado com sucesso',
+                    mensagem: 'Fornecedor atualizado com sucesso!!!',
                     fornecedorAtualizado: {
                         id_fornecedor: req.body.id_fornecedor,
                         nome: req.body.nome,
@@ -132,7 +133,7 @@ exports.deleteFornecedor =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Fornecedor removido com sucesso',
+                    mensagem: 'Fornecedor removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'insere uma fornecedor',

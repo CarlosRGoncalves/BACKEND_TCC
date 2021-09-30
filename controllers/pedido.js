@@ -79,6 +79,7 @@ exports.postPedido = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query('SELECT * FROM produto_final WHERE id_produto_final = ?', [req.body.id_produto_final], (error, resultado)=>{
+            conn.release();
             if(error){return res.status(500).send({error:error,response: null});}
             if(resultado.length==0){
                 return  res.status(409).send({mensagem: 'Produto não Encontrado'});
@@ -119,6 +120,7 @@ exports.patchPedido =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query('SELECT valor FROM produto_final WHERE id_produto_final = ?', [req.body.id_produto_final], (error, resultado)=>{
+            conn.release();
             if(error){return res.status(500).send({error:error,response: null});}
             if(resultado.length>0){
             return  res.status(409).send({mensagem: 'Produto não Encontrado'});
