@@ -16,6 +16,7 @@ exports.getInsumo =(req, res, next) =>{
                         return {
                             id_insumo: tp_insumo.id_insumo,
                             id_fornecedor: tp_insumo.id_fornecedor,
+                            nome: tp_insumo.nome,
                             descricao: tp_insumo.descricao,
                             quantidade: tp_insumo.quantidade,
                             data: tp_insumo.data,
@@ -40,16 +41,17 @@ exports.postInsumo =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO insumo (id_fornecedor,descricao,quantidade,data,valor) VALUES (?,?,?,?,?)',
-            [req.body.nome,req.body.descricao],
+            'INSERT INTO insumo (id_fornecedor,nome,descricao,quantidade,data,valor) VALUES (?,?,?,?,?,?)',
+            [req.body.id_fornecedor,req.body.nome,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Insumo inserido com sucesso',
+                    mensagem: 'Insumo cadastrado com sucesso!!!',
                     insumoCriado: {
                         id_insumo: req.body.id_insumo,
                         id_fornecedor: req.body.id_fornecedor,
+                        nome: req.body.nome,
                         descricao: req.body.descricao,
                         quantidade: req.body.quantidade,
                         data: req.body.data,
@@ -78,13 +80,14 @@ exports.getInsumoID =(req, res, next) =>{
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
                     return res.length(404).send({
-                        mensagem:' Não foi encontrado tipo de insumo com este ID'
+                        mensagem:' Não foi encontrado Insumo com este ID!!!'
                     })
                 }
                 const response = {
                     insumo: {
                         id_insumo: result[0].id_insumo,
                         id_fornecedor: result[0].id_fornecedor,
+                        nome: result[0].nome,
                         descricao: result[0].descricao,
                         quantidade: result[0].quantidade,
                         data: result[0].data,
@@ -108,16 +111,17 @@ exports.patchInsumo =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE insumo SET  id_fornecedor = ?,descricao= ?, quantidade = ?, data =?, valor =? WHERE id_p_doenca =?',
-            [req.body.nome,req.body.descricao,req.params.id_p_doenca],
+            'UPDATE insumo SET  id_fornecedor = ?,nome = ?,descricao= ?, quantidade = ?, data =?, valor =? WHERE id_insumo =?',
+            [req.body.id_fornecedor,req.body.nome,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor,req.params.id_insumo],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pragas e doencas atualizado com sucesso',
+                    mensagem: 'Insumo atualizado com sucesso!!!',
                     insumoAtualizado: {
                         id_insumo: req.body.id_insumo,
                         id_fornecedor: req.body.id_fornecedor,
+                        nome: req.body.nome,
                         descricao: req.body.descricao,
                         quantidade: req.body.quantidade,
                         data: req.body.data,
@@ -146,10 +150,10 @@ exports.deleteInsumo =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Insumo removido com sucesso',
+                    mensagem: 'Insumo removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
-                        descriucao: 'insere uma insumo',
+                        descricao: 'insere uma insumo',
                         url:'http://localhost:3006/insumo/'
                     }
                 }

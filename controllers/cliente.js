@@ -4,6 +4,15 @@ const mysql = require('../mysql').pool;
 //INSERE CLIENTES 
 exports.postCliente = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});}
+        const query = 'SELECT * FROM cliente WHERE email = ?';
+        conn.query(query, [req.body.email], (error, resultado, fields) =>{
+            conn.release();
+            if(error){return res.status(500).send({error:error});}
+            if(resultado.length>0){
+               // console.log('aquidd')
+                return res.status(401).send({mensagem: 'E-mail já Cadastrado!!!'})
+            }
         conn.query(
             'INSERT INTO cliente (nome,email,telefone,cpf,endereco) VALUES (?,?,?,?,?)',
             [req.body.nome,req.body.email,req.body.telefone,req.body.cpf,req.body.endereco],
@@ -15,12 +24,25 @@ exports.postCliente = (req, res, next) =>{
                         response: null
                     });
                 }
-                res.status(201).send({
-                    mensagem: 'Cliente inserido com sucesso',
-                    id_cliente: resultado.insertId
-                });
-            }
-        )
+                const response = {
+                    mensagem: 'Cliente cadastrado com sucesso!!!',
+                    clienteCriado: {
+                        id_cliente: req.body.id_cliente,
+                        nome: req.body.nome,
+                        email: req.body.email,
+                        telefone: req.body.telefone,
+                        cpf: req.body.cpf,
+                        endereco:req.body.endereco,
+                        request: {
+                            tipo: 'POST',
+                            descricao: 'Insere Cliente',
+                            url: 'http://localhost:3006/cliente'
+                        }
+                    }
+                }
+                return res.status(201).send({response});
+            })
+        })
     })
  
 }
@@ -95,6 +117,7 @@ exports.patchCliente = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
+        
         conn.query(
             'UPDATE cliente SET  nome = ?, email = ?, telefone = ?, cpf =?, endereco =? WHERE id_cliente =?',
             [req.body.nome,req.body.email,req.body.telefone,req.body.cpf,req.body.endereco,req.params.id_cliente],
@@ -102,7 +125,7 @@ exports.patchCliente = (req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Cliente atualizado com sucesso',
+                    mensagem: 'Cliente atualizado com sucesso!!!',
                     clienteAtualizado: {
                        nome: req.body.nome,
                        email: req.body.email,
@@ -132,10 +155,10 @@ exports.deleteCliente = (req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Cliente removido com sucesso',
+                    mensagem: 'Cliente removido com sucesso!!!',
                     request:{
                         tipo: 'POST',
-                        descriucao: 'insere um tipo de planta',
+                        descricao: 'insere um Cliente',
                         url:'http://localhost:3006/cliente/'
                     }
                 }

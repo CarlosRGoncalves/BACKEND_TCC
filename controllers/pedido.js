@@ -82,10 +82,10 @@ exports.postPedido = (req, res, next) =>{
             conn.release();
             if(error){return res.status(500).send({error:error,response: null});}
             if(resultado.length==0){
-                return  res.status(409).send({mensagem: 'Produto não Encontrado'});
+                return  res.status(409).send({mensagem: 'Pedido não Encontrado!!!'});
             }else{  
                    // console.log(resultado)
-                    const valor_final = (resultado[0].valor)*(req.body.quantidade);
+                    const valor_final = ((resultado[0].valor)*(req.body.quantidade)).toFixed(2);
                    // console.log(valor_final)
                     conn.query(
                         'INSERT INTO pedido (id_produto_final,id_cliente,status,descricao,quantidade,valor,data) VALUES (?,?,?,?,?,?,?)',
@@ -100,10 +100,10 @@ exports.postPedido = (req, res, next) =>{
                                 });
                             }
                             response = {
-                                mensagem: 'Usuario criado com sucesso',
-                                usuarioCriado: {
-                                   id_usuario: result.insertId,
-                                   id_cliente: req.body.id_cliente
+                                mensagem: 'Pedido cadastrado com sucesso!!!',
+                                pedidoCriado: {
+                                    id_pedido: result.insertId,
+                                    valor: valor_final
                                 }
                             }
                             //console.log(req.body.nome)
@@ -122,13 +122,13 @@ exports.patchPedido =(req, res, next) =>{
         conn.query('SELECT valor FROM produto_final WHERE id_produto_final = ?', [req.body.id_produto_final], (error, resultado)=>{
             conn.release();
             if(error){return res.status(500).send({error:error,response: null});}
-            if(resultado.length>0){
-            return  res.status(409).send({mensagem: 'Produto não Encontrado'});
+            if(resultado.length==0){
+            return  res.status(409).send({mensagem: 'Pedido não Encontrado!!!'});
             }else{  
                     const valor_final = (resultado[0].valor)*(req.body.quantidade);
                     conn.query(
-                        'UPDATE pedido SET id_produto_final,id_cliente,status,descricao,quantidade,valor,data WHERE id_pedido =?',
-                        [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,req.body.quantidade,valor_final,req.body.data,req.body.id_pedido
+                        'UPDATE pedido SET id_produto_final = ?,id_cliente= ?,status= ?,descricao= ?,quantidade= ?,valor= ?,data= ? WHERE id_pedido =?',
+                        [req.body.id_produto_final,req.body.id_cliente,req.body.status,req.body.descricao,req.body.quantidade,valor_final,req.body.data,req.params.id_pedido
                         ],
                         (error, result, field) =>{
                             conn.release();
@@ -139,14 +139,14 @@ exports.patchPedido =(req, res, next) =>{
                                 });
                             }
                             response = {
-                                mensagem: 'Usuario criado com sucesso',
-                                usuarioCriado: {
-                                   id_usuario: result.insertId,
-                                   id_cliente: req.body.id_cliente
+                                mensagem: 'Pedido atualizado com sucesso!!!',
+                                pedidoCriado: {
+                                    id_pedido: req.params.id_pedido,
+                                    valor: valor_final
                                 }
                             }
                             //console.log(req.body.nome)
-                            res.status(201).send({response});
+                            res.status(202).send({response});
                     })
                
             }
@@ -165,7 +165,7 @@ exports.deletePedido = (req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pedido removido com sucesso',
+                    mensagem: 'Pedido removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
                         descricao: 'Exclui um Pedido',
