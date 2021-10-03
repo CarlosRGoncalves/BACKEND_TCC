@@ -9,9 +9,10 @@ exports.getPedido = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM pedido',
+            'SELECT A.id_pedido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome, C.email FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C on C.id_cliente = A.id_cliente',
             (error, result, field) =>{
                 conn.release();
+                //console.log(result)
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     quantidade: result.length,
@@ -19,6 +20,8 @@ exports.getPedido = (req, res, next) =>{
                         return {
                             id_pedido: tp_pedido.id_pedido,
                             id_produto_final: tp_pedido.id_produto_final,
+                            email: tp_pedido.email,
+                            nome_produto_final: tp_pedido.nome,
                             id_cliente: tp_pedido.id_cliente,
                             status: tp_pedido.status,
                             descricao: tp_pedido.descricao,

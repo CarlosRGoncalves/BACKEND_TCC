@@ -6,17 +6,20 @@ exports.getPlanta =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM planta',
+            'SELECT A.id_planta,A.id_tipo_planta,B.nome_tipo_planta,A.nome_planta,A.descricao,A.epoca_plantio,A.forma_plantio,A.tempo_colheita FROM planta A INNER JOIN tipo_planta B ON A.id_tipo_planta = B.id_tipo_planta ',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
+              //  console.log(result)
                 const response = {
                     quantidade: result.length,
                     planta: result.map(tp_planta =>{
+                        console.log(tp_planta)
                         return {
                             id_planta: tp_planta.id_planta,
+                            nome_tipo_planta: tp_planta.nome_tipo_planta,
                             id_tipo_planta: tp_planta.id_tipo_planta,
-                            nome: tp_planta.nome,
+                            nome_planta: tp_planta.nome_planta,
                             descricao: tp_planta.descricao,
                             epoca_plantio: tp_planta.epoca_plantio,
                             forma_plantio: tp_planta.forma_plantio,
@@ -41,8 +44,8 @@ exports.postPlanta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO planta (id_tipo_planta,nome,descricao,epoca_plantio,forma_plantio,tempo_colheita) VALUES (?,?,?,?,?,?)',
-            [req.body.id_tipo_planta,req.body.nome,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita],
+            'INSERT INTO planta (id_tipo_planta,nome_planta,descricao,epoca_plantio,forma_plantio,tempo_colheita) VALUES (?,?,?,?,?,?)',
+            [req.body.id_tipo_planta,req.body.nome_planta,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -50,7 +53,7 @@ exports.postPlanta =(req, res, next) =>{
                     mensagem: 'Planta cadastrada com sucesso!!!',
                     plantaCriado: {
                         id_tipo_planta: req.body.id_tipo_planta,
-                        nome: req.body.nome,
+                        nome_planta: req.body.nome_planta,
                         descricao: req.body.descricao,
                         epoca_plantio: req.body.epoca_plantio,
                         forma_plantio: req.body.forma_plantio,
@@ -86,7 +89,7 @@ exports.getPlantaID =(req, res, next) =>{
                     planta: {
                         id_planta: result[0].id_planta,
                         id_tipo_planta: result[0].id_tipo_planta,
-                        nome: result[0].nome,
+                        nome_planta: result[0].nome_planta,
                         descricao: result[0].descricao,
                         epoca_plantio: result[0].epoca_plantio,
                         forma_plantio: result[0].forma_plantio,
@@ -110,8 +113,8 @@ exports.patchPlanta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE planta SET  id_tipo_planta = ?,nome = ?,descricao = ?,epoca_plantio = ?, forma_plantio = ?, tempo_colheita = ? WHERE id_planta =?',
-            [req.body.id_tipo_planta, req.body.nome,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita,req.params.id_planta],
+            'UPDATE planta SET  id_tipo_planta = ?,nome_planta = ?,descricao = ?,epoca_plantio = ?, forma_plantio = ?, tempo_colheita = ? WHERE id_planta =?',
+            [req.body.id_tipo_planta, req.body.nome_planta,req.body.descricao,req.body.epoca_plantio,req.body.forma_plantio,req.body.tempo_colheita,req.params.id_planta],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -119,7 +122,7 @@ exports.patchPlanta =(req, res, next) =>{
                     mensagem: 'Planta atualizada com sucesso!!!',
                     plantaAtualizado: {
                         id_tipo_planta: req.body.id_tipo_planta,
-                        nome: req.body.nome,
+                        nome_planta: req.body.nome_planta,
                         descricao: req.body.descricao,
                         epoca_plantio: req.body.epoca_plantio,
                         forma_plantio: req.body.forma_plantio,
@@ -151,7 +154,7 @@ exports.deletePlanta =(req, res, next) =>{
                     mensagem: 'Planta removida com sucesso!!!',
                     request:{
                         tipo: 'POST',
-                        descriucao: 'insere um tipo de planta',
+                        descricao: 'insere um tipo de planta',
                         url:'http://localhost:3006/tipo_planta/'
                     }
                 }

@@ -14,7 +14,7 @@ exports.getPragas_doenca =(req, res, next) =>{
                     pragas_doenca: result.map(tp_pragas_doenca =>{
                         return {
                             id_p_doenca: tp_pragas_doenca.id_p_doenca,
-                            nome: tp_pragas_doenca.nome,
+                            nome_p_doenca: tp_pragas_doenca.nome_p_doenca,
                             descricao: tp_pragas_doenca.descricao,
                             request: {
                                 tipo: 'GET',
@@ -36,15 +36,15 @@ exports.postPragas_doenca =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO pragas_doenca (nome,descricao) VALUES (?,?)',
-            [req.body.nome,req.body.descricao],
+            'INSERT INTO pragas_doenca (nome_p_doenca,descricao) VALUES (?,?)',
+            [req.body.nome_p_doenca,req.body.descricao],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     mensagem: 'Pragas/Doencas cadastradas com sucesso!!!',
                     pragas_doencaCriado: {
-                        nome: req.body.nome,
+                        nome_p_doenca: req.body.nome_p_doenca,
                         descricao: req.body.descricao,
                         request: {
                             tipo: 'POST',
@@ -76,7 +76,7 @@ exports.getPragas_doencaID =(req, res, next) =>{
                 const response = {
                     pragas_doenca: {
                         id_p_doenca: result[0].id_p_doenca,
-                        nome: result[0].nome,
+                        nome_p_doenca: result[0].nome_p_doenca,
                         descricao: result[0].descricao,
                         request: {
                             tipo: 'GET',
@@ -97,8 +97,8 @@ exports.patchPragas_doenca =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE pragas_doenca SET  nome = ?,descricao= ? WHERE id_p_doenca =?',
-            [req.body.nome,req.body.descricao,req.params.id_p_doenca],
+            'UPDATE pragas_doenca SET  nome_p_doenca = ?,descricao= ? WHERE id_p_doenca =?',
+            [req.body.nome_p_doenca,req.body.descricao,req.params.id_p_doenca],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -106,7 +106,7 @@ exports.patchPragas_doenca =(req, res, next) =>{
                     mensagem: 'Pragas/Doenças atualizado com sucesso!!!',
                     pragas_doencaAtualizado: {
                         id_p_doenca: req.body.id_p_doenca,
-                        nome: req.body.nome,
+                        nome_p_doenca: req.body.nome_p_doenca,
                         descricao: req.body.descricao,
                         request: {
                             tipo: 'PATCH',

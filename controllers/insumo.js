@@ -5,18 +5,21 @@ const mysql = require('../mysql').pool;
 exports.getInsumo =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
-        conn.query(
-            'SELECT * FROM insumo',
+        conn.query( 
+            'SELECT A.id_insumo,A.nome_insumo,A.descricao,A.quantidade,A.data,A.valor,B.nome_fornecedor FROM insumo A INNER JOIN fornecedor B ON A.id_fornecedor = B.id_fornecedor',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
+                console.log(result)
+
                 const response = {
                     quantidade: result.length,
                     insumo: result.map(tp_insumo =>{
                         return {
                             id_insumo: tp_insumo.id_insumo,
                             id_fornecedor: tp_insumo.id_fornecedor,
-                            nome: tp_insumo.nome,
+                            nome_fornecedor: tp_insumo.nome_fornecedor,
+                            nome_insumo: tp_insumo.nome_insumo,
                             descricao: tp_insumo.descricao,
                             quantidade: tp_insumo.quantidade,
                             data: tp_insumo.data,
@@ -41,8 +44,8 @@ exports.postInsumo =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO insumo (id_fornecedor,nome,descricao,quantidade,data,valor) VALUES (?,?,?,?,?,?)',
-            [req.body.id_fornecedor,req.body.nome,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor],
+            'INSERT INTO insumo (id_fornecedor,nome_insumo,descricao,quantidade,data,valor) VALUES (?,?,?,?,?,?)',
+            [req.body.id_fornecedor,req.body.nome_insumo,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -51,7 +54,7 @@ exports.postInsumo =(req, res, next) =>{
                     insumoCriado: {
                         id_insumo: req.body.id_insumo,
                         id_fornecedor: req.body.id_fornecedor,
-                        nome: req.body.nome,
+                        nome_insumo: req.body.nome_insumo,
                         descricao: req.body.descricao,
                         quantidade: req.body.quantidade,
                         data: req.body.data,
@@ -87,7 +90,7 @@ exports.getInsumoID =(req, res, next) =>{
                     insumo: {
                         id_insumo: result[0].id_insumo,
                         id_fornecedor: result[0].id_fornecedor,
-                        nome: result[0].nome,
+                        nome_insumo: result[0].nome_insumo,
                         descricao: result[0].descricao,
                         quantidade: result[0].quantidade,
                         data: result[0].data,
@@ -111,8 +114,8 @@ exports.patchInsumo =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE insumo SET  id_fornecedor = ?,nome = ?,descricao= ?, quantidade = ?, data =?, valor =? WHERE id_insumo =?',
-            [req.body.id_fornecedor,req.body.nome,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor,req.params.id_insumo],
+            'UPDATE insumo SET  id_fornecedor = ?,nome_insumo = ?,descricao= ?, quantidade = ?, data =?, valor =? WHERE id_insumo =?',
+            [req.body.id_fornecedor,req.body.nome_insumo,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor,req.params.id_insumo],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -121,7 +124,7 @@ exports.patchInsumo =(req, res, next) =>{
                     insumoAtualizado: {
                         id_insumo: req.body.id_insumo,
                         id_fornecedor: req.body.id_fornecedor,
-                        nome: req.body.nome,
+                        nome_insumo: req.body.nome_insumo,
                         descricao: req.body.descricao,
                         quantidade: req.body.quantidade,
                         data: req.body.data,

@@ -16,7 +16,7 @@ exports.gettipo_planta =(req, res, next) =>{
                         return {
                             id_tipo_planta: tp_plantas.id_tipo_planta,
                             id_usuario: tp_plantas.id_usuario,
-                            nome: tp_plantas.nome,
+                            nome_tipo_planta: tp_plantas.nome_tipo_planta,
                             descricao: tp_plantas.descricao,
                             request: {
                                 tipo: 'GET',
@@ -38,8 +38,8 @@ exports.posttipo_planta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO tipo_planta (id_usuario,nome,descricao) VALUES (?,?,?)',
-            [req.body.id_usuario,req.body.nome,req.body.descricao],
+            'INSERT INTO tipo_planta (id_usuario,nome_tipo_planta,descricao) VALUES (?,?,?)',
+            [req.body.id_usuario,req.body.nome_tipo_planta,req.body.descricao],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -47,7 +47,7 @@ exports.posttipo_planta =(req, res, next) =>{
                     mensagem: 'Tipo de planta cadastrado com sucesso!!!',
                     tipo_plantaCriado: {
                         id_usuario: req.body.id_usuario,
-                        nome: req.body.nome,
+                        nome_tipo_planta: req.body.nome_tipo_planta,
                         descricao: req.body.descricao,
                         request: {
                             tipo: 'POST',
@@ -79,7 +79,7 @@ exports.gettipo_plantaID =(req, res, next) =>{
                 const response = {
                     tipo_planta: {
                         id_usuario: result[0].id_usuario,
-                        nome: result[0].nome,
+                        nome_tipo_planta: result[0].nome_tipo_planta,
                         descricao: result[0].descricao,
                         request: {
                             tipo: 'GET',
@@ -100,8 +100,8 @@ exports.patchtipo_planta =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE tipo_planta SET nome = ?, descricao = ? WHERE id_tipo_planta =?',
-            [req.body.nome,req.body.descricao,req.params.id_tipo_planta],
+            'UPDATE tipo_planta SET nome_tipo_planta = ?, descricao = ? WHERE id_tipo_planta =?',
+            [req.body.nome_tipo_planta,req.body.descricao,req.params.id_tipo_planta],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -109,7 +109,7 @@ exports.patchtipo_planta =(req, res, next) =>{
                     mensagem: 'Tipo de planta atualizado com sucesso!!!',
                     tipo_plantaAtualizado: {
                         id_usuario: req.body.id_usuario,
-                        nome: req.body.nome,
+                        nome_tipo_planta: req.body.nome_tipo_planta,
                         descricao: req.body.descricao,
                         request: {
                             tipo: 'PATCH',

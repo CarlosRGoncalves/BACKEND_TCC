@@ -15,7 +15,7 @@ exports.getFornecedor =(req, res, next) =>{
                     fornecedor: result.map(tp_fornecedor =>{
                         return {
                             id_fornecedor: tp_fornecedor.id_fornecedor,
-                            nome: tp_fornecedor.nome,
+                            nome_fornecedor: tp_fornecedor.nome_fornecedor,
                             cnpj: tp_fornecedor.cnpj,
                             request: {
                                 tipo: 'GET',
@@ -37,15 +37,15 @@ exports.postFornecedor =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO fornecedor (nome,cnpj) VALUES (?,?)',
-            [req.body.nome,req.body.cnpj],
+            'INSERT INTO fornecedor (nome_fornecedor,cnpj) VALUES (?,?)',
+            [req.body.nome_fornecedor,req.body.cnpj],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     mensagem: 'Fornecedor cadastrado com sucesso!!!',
                     fornecedorCriado: {
-                        nome: req.body.nome,
+                        nome_fornecedor: req.body.nome_fornecedor,
                         cnpj: req.body.cnpj,
                         request: {
                             tipo: 'POST',
@@ -77,7 +77,7 @@ exports.getFornecedorID =(req, res, next) =>{
                 const response = {
                     fornecedor: {
                         id_fornecedor: result[0].id_fornecedor,
-                        nome: result[0].nome,
+                        nome_fornecedor: result[0].nome_fornecedor,
                         cnpj: result[0].cnpj,
                         request: {
                             tipo: 'GET',
@@ -98,8 +98,8 @@ exports.patchFornecedor =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE fornecedor SET  nome = ?,cnpj= ? WHERE id_fornecedor =?',
-            [req.body.nome,req.body.cnpj,req.params.id_fornecedor],
+            'UPDATE fornecedor SET  nome_fornecedor = ?,cnpj= ? WHERE id_fornecedor =?',
+            [req.body.nome_fornecedor,req.body.cnpj,req.params.id_fornecedor],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -107,7 +107,7 @@ exports.patchFornecedor =(req, res, next) =>{
                     mensagem: 'Fornecedor atualizado com sucesso!!!',
                     fornecedorAtualizado: {
                         id_fornecedor: req.body.id_fornecedor,
-                        nome: req.body.nome,
+                        nome_fornecedor: req.body.nome_fornecedor,
                         cnpj: req.body.cnpj,
                         request: {
                             tipo: 'PATCH',
