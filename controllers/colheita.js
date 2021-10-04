@@ -21,7 +21,7 @@ exports.getColheita =(req, res, next) =>{
                             quantidade: tp_colheita.quantidade,
                             request: {
                                 tipo: 'GET',
-                                id_pedido: 'Retorno de todos as pragas e doencas',
+                                id_pedido: 'Retorno de todos as colheitas',
                                 url: 'http://localhost:3006/colheita/' + tp_colheita.id_colheita
                             }
                         }
@@ -45,8 +45,9 @@ exports.postColheita =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Colheita inserido com sucesso',
+                    mensagem: 'Colheita cadastrada com sucesso!!!',
                     colheitaCriado: {
+                        id_colheita: result.insertId,
                         id_producao: req.body.id_producao,
                         id_pedido: req.body.id_pedido,
                         data_colheita: req.body.data_colheita,
@@ -109,7 +110,7 @@ exports.patchColheita =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Pragas e doencas atualizado com sucesso',
+                    mensagem: 'Colheitas atualizada com sucesso!!!',
                     colheitaAtualizado: {
                         id_producao: req.body.id_producao,
                         id_pedido: req.body.id_pedido,
@@ -139,7 +140,7 @@ exports.deleteColheita =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Colheita removido com sucesso',
+                    mensagem: 'Colheita removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'Deleta uma colheita',

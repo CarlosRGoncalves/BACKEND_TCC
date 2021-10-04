@@ -6,7 +6,7 @@ exports.getPlantio =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM plantio',
+            'SELECT A.id_plantio,A.id_secao,A.id_planta,A.descricao,A.quantidade,A.data_plantio,A.valor_custo,B.nome_planta FROM plantio A INNER JOIN planta B ON A.id_planta = B.id_planta',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -17,6 +17,7 @@ exports.getPlantio =(req, res, next) =>{
                             id_plantio: tp_plantio.id_plantio,
                             id_secao: tp_plantio.id_secao,
                             id_planta: tp_plantio.id_planta,
+                            nome_planta: tp_plantio.nome_planta,
                             descricao: tp_plantio.descricao,
                             quantidade: tp_plantio.quantidade,
                             data_plantio: tp_plantio.data_plantio,
@@ -47,7 +48,7 @@ exports.postPlantio =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Tipo de plantio inserido com sucesso',
+                    mensagem: 'Plantio inserido com sucesso!!!',
                     plantioCriado: {
                         id_secao: req.body.id_secao,
                         id_planta: req.body.id_planta,
@@ -116,7 +117,7 @@ exports.patchPlantio =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Plantio atualizado com sucesso',
+                    mensagem: 'Plantio atualizado com sucesso!!!',
                     plantioAtualizado: {
                         id_secao: req.body.id_secao,
                         id_planta: req.body.id_planta,
@@ -148,10 +149,10 @@ exports.deletePlantio =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Plantio removido com sucesso',
+                    mensagem: 'Plantio removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
-                        descriucao: 'insere um tipo de plantio',
+                        descricao: 'Deleta um plantio',
                         url:'http://localhost:3006/tipo_plantio/'
                     }
                 }

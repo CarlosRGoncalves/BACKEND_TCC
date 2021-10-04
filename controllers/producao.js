@@ -6,7 +6,7 @@ exports.getProducao =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM producao',
+            'SELECT A.id_producao,A.id_insumo,A.id_plantio, A.id_p_doenca, A.adubacao, A.defensivo, A.data_defensivo,A.data_adubacao,A.qtd_adubacao,A.qtd_defensivo,B.nome_insumo, C.nome_p_doenca  FROM producao A INNER JOIN insumo B ON A.id_insumo = B.id_insumo INNER JOIN pragas_doenca C ON C.id_p_doenca = A.id_p_doenca',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -18,6 +18,8 @@ exports.getProducao =(req, res, next) =>{
                             id_insumo: tp_producao.id_insumo,
                             id_plantio: tp_producao.id_plantio,
                             id_p_doenca: tp_producao.id_p_doenca,
+                            nome_insumo:tp_producao.nome_insumo,
+                            nome_p_doenca:tp_producao.nome_p_doenca,
                             adubacao: tp_producao.adubacao,
                             defensivo: tp_producao.defensivo,
                             data_defensivo: tp_producao.data_defensivo,
@@ -50,8 +52,9 @@ exports.postProducao =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Producao inserido com sucesso',
+                    mensagem: 'Produção cadastrada com sucesso!!!',
                     producaoCriado: {
+                        id_producao: result.insertId,
                         id_insumo: req.body.id_insumo,
                         id_plantio: req.body.id_plantio,
                         id_p_doenca: req.body.id_p_doenca,
@@ -82,9 +85,10 @@ exports.getProducaoID =(req, res, next) =>{
             [req.params.id_producao],
             (error, result, field) =>{
                 conn.release();
+                //console.log(result)
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
-                    return res.length(404).send({
+                    return res.status(404).send({
                         mensagem:' Não foi encontrado tipo de producao com este ID'
                     })
                 }
@@ -101,7 +105,7 @@ exports.getProducaoID =(req, res, next) =>{
                         qtd_defensivo: result[0].qtd_defensivo,
                         request: {
                             tipo: 'GET',
-                            descricao: 'Retorna os detalhes da Producao',
+                            descricao: 'Retorna os detalhes da Produção!!!',
                             url: 'http://localhost:3006/producao'
                         }
                     }
@@ -124,7 +128,7 @@ exports.patchProducao =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Producao atualizado com sucesso',
+                    mensagem: 'Produção atualizada com sucesso!!!',
                     producaoAtualizado: {
                         id_insumo: req.body.id_insumo,
                         id_plantio: req.body.id_plantio,
@@ -159,10 +163,10 @@ exports.deleteProducao =(req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
-                    mensagem: 'Producao removido com sucesso',
+                    mensagem: 'Produção removido com sucesso!!!',
                     request:{
                         tipo: 'DELETE',
-                        descriucao: 'insere uma producao',
+                        descricao: 'Deleta uma producao!!!',
                         url:'http://localhost:3006/tipo_producao/'
                     }
                 }
