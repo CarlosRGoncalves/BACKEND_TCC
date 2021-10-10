@@ -4,6 +4,41 @@ const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const login = require('../middleware/login');
+
+
+exports.postPedidoRelatorio = (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});}
+        conn.query(
+            'select B.nome,sum(A.quantidade) AS quantidade_total,sum(A.valor) AS soma_total from pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final where A.data BETWEEN ? AND ? GROUP BY A.id_produto_final ',
+            [req.body.data_inicial,req.body.data_final],
+            (error, result, field) =>{
+                conn.release();
+                if(error){return res.status(500).send({error:error,response: null});}
+
+                const response = {
+                    quantidade: result.length,
+                    pedido: result.map(tp_pedido =>{
+                        return {
+                            nome: tp_pedido.nome,
+                            quantidade: tp_pedido.quantidade_total,
+                            valor: tp_pedido.soma_total,
+                            request: {
+                                tipo: 'POST',
+                                descricao: 'Retorno de todos os Pedidos',
+                                url: 'http://localhost:3006/pedido/' 
+                            }
+                        }
+                    })
+                }
+                //console.log(response)
+                return res.status(200).send(response);
+            }
+        )
+    });
+}
+
+
 //RETORNA TODOS USUARIOS
 exports.getPedido = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
@@ -42,6 +77,10 @@ exports.getPedido = (req, res, next) =>{
         )
     });
 }
+
+
+
+
 exports.getPedidoID = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
