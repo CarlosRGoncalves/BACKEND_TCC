@@ -5,6 +5,7 @@ const login = require('../middleware/login');
 const ClienteController = require('../controllers/cliente');
 //RETORNA TODOS OD TIPOS DE PLANTAS
 router.get('/',login.obrigatorio, ClienteController.getCliente);
+router.get('/relatorio',login.obrigatorio, ClienteController.getClienteRelatorio);
 router.post('/', ClienteController.postCliente);
 router.get('/:id_cliente',login.obrigatorio, ClienteController.getClienteID)
 router.patch('/:id_cliente', ClienteController.patchCliente);

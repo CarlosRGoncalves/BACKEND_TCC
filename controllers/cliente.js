@@ -77,6 +77,37 @@ exports.getCliente = (req, res, next) =>{
         )
     });
 }
+
+exports.getClienteRelatorio = (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});}
+        conn.query(
+            'select C.nome, C.email,sum(A.valor)  AS valor_gasto ,A.status from pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON A.id_cliente = C.id_cliente   GROUP BY A.status,A.id_cliente ',
+            (error, result, field) =>{
+                conn.release();
+                if(error){return res.status(500).send({error:error,response: null});}
+                const response = {
+                    quantidade: result.length,
+                    cliente: result.map(tp_cliente =>{
+                        return {
+                            nome: tp_cliente.nome,
+                            email: tp_cliente.email,
+                            valor_gasto: tp_cliente.valor_gasto,
+                            status: tp_cliente.status,
+                            
+                            request: {
+                                tipo: 'GET',
+                                descricao: 'Retorno o Relatório cliente',
+                                url: 'http://localhost:3006/cliente/'
+                            }
+                        }
+                    })
+                }
+                return res.status(200).send(response);
+            }
+        )
+    });
+}
 // RETORNA OS DADOS DE UM CLIENTE
 exports.getClienteID = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
@@ -88,7 +119,7 @@ exports.getClienteID = (req, res, next) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
                 if(result.length ==0){
-                    return res.length(404).send({
+                    return res.status(404).send({
                         mensagem:' Não foi encontrado tipo de planta com este ID'
                     })
                 }
