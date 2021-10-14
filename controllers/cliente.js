@@ -82,7 +82,7 @@ exports.getClienteRelatorio = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'select C.nome, C.email,sum(A.valor)  AS valor_gasto ,A.status from pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON A.id_cliente = C.id_cliente   GROUP BY A.status,A.id_cliente ',
+            'select C.nome, C.email,sum(A.valor)  AS valor_gasto ,A.status from pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON A.id_cliente = C.id_cliente   GROUP BY A.status,A.id_cliente ORDER BY C.nome',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
