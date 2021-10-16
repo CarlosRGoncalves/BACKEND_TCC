@@ -142,7 +142,7 @@ exports.postUsuario = (req, res, next) =>{
                     })
                 }
                 //console.log('aqui')
-                return res.status(401).send({ mensagem: 'Falha na autenticação' })
+                return res.status(401).send({ mensagem: 'Falha na autenticação ultima' })
             })
         })
       
