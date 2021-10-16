@@ -122,7 +122,7 @@ exports.postUsuario = (req, res, next) =>{
             bcrypt.compare(req.body.senha, resultado[0].senha,(err, resultado_senha)=>{
                 if(err){
                     //console.log('aqui1')
-                    return res.status(401).send({ mensagem: 'Falha na autenticação' })
+                    return res.status(401).send({ mensagem: 'Falha na autenticação senha' })
                 }
                 if(resultado_senha){
                     const token = jwt.sign({
