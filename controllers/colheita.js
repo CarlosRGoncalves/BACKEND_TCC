@@ -22,7 +22,7 @@ exports.getColheita =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 id_pedido: 'Retorno de todos as colheitas',
-                                url: 'http://localhost:3006/colheita/' + tp_colheita.id_colheita
+                                url: process.env.URL_API + 'colheita/' + tp_colheita.id_colheita
                             }
                         }
                     })
@@ -55,7 +55,7 @@ exports.postColheita =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             id_pedido: 'Insere Colheita',
-                            url: 'http://localhost:3006/colheita'
+                            url: process.env.URL_API + 'colheita'
                         }
                     }
                 }
@@ -88,7 +88,7 @@ exports.getColheitaID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             id_pedido: 'Retorna os detalhes da Colheita',
-                            url: 'http://localhost:3006/colheita'
+                            url: process.env.URL_API + 'colheita'
                         }
                     }
                 }
@@ -119,7 +119,7 @@ exports.patchColheita =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             id_pedido: 'Altera Colheita',
-                            url: 'http://localhost:3006/colheita/' + req.body.id_colheita
+                            url: process.env.URL_API + 'colheita/' + req.body.id_colheita
                         }
                     }
                 }
@@ -144,7 +144,7 @@ exports.deleteColheita =(req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'Deleta uma colheita',
-                        url:'http://localhost:3006/colheita/'
+                        url:process.env.URL_API + 'colheita/'
                     }
                 }
                return res.status(202).send({response});

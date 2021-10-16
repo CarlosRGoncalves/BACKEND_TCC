@@ -36,7 +36,7 @@ exports.postCliente = (req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Cliente',
-                            url: 'http://localhost:3006/cliente'
+                            url: 'process.env.URL_API +cliente'
                         }
                     }
                 }
@@ -67,7 +67,7 @@ exports.getCliente = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos os tipos cliente',
-                                url: 'http://localhost:3006/cliente/' + tp_cliente.id_cliente
+                                url: 'process.env.URL_API +cliente/' + tp_cliente.id_cliente
                             }
                         }
                     })
@@ -98,7 +98,7 @@ exports.getClienteRelatorio = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno o Relatório cliente',
-                                url: 'http://localhost:3006/cliente/'
+                                url: 'process.env.URL_API +cliente/'
                             }
                         }
                     })
@@ -133,7 +133,7 @@ exports.getClienteID = (req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes dos Clientes',
-                            url: 'http://localhost:3006/cliente'
+                            url: process.env.URL_API +'cliente'
                         }
                     }
                 }
@@ -166,7 +166,7 @@ exports.patchCliente = (req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Cliente',
-                            url: 'http://localhost:3006/cliente/' + req.body.id_cliente
+                            url: process.env.URL_API +'cliente/' + req.body.id_cliente
                         }
                     }
                 }
@@ -190,7 +190,7 @@ exports.deleteCliente = (req, res, next) =>{
                     request:{
                         tipo: 'POST',
                         descricao: 'insere um Cliente',
-                        url:'http://localhost:3006/cliente/'
+                        url:process.env.URL_API +'cliente/'
                     }
                 }
                return res.status(202).send({response});

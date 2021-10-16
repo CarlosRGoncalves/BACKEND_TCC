@@ -5,6 +5,7 @@
         "MYSQL_DATABASE" : "mydb",
         "MYSQL_HOST" : "localhost",
         "MYSQL_PORT" : 3306,
-        "JWT_KEY": "ABACAXI"
+        "JWT_KEY": "ABACAXI",
+        "URL_API": "http://localhost:3006/" 
     }
 }

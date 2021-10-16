@@ -25,7 +25,7 @@ exports.getUsuario = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos os Usuarios',
-                                url: 'http://localhost:3006/usuario/' + tp_usuario.id_usuario
+                                url: process.env.URL_API + 'usuario/' + tp_usuario.id_usuario
                             }
                         }
                     })
@@ -54,7 +54,7 @@ exports.getUsuarioID = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorna o Usuario',
-                                url: 'http://localhost:3006/usuario/'
+                                url: process.env.URL_API + 'usuario/'
                             }
                         
                     }
@@ -186,7 +186,7 @@ exports.deleteUsuario = (req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descricao: 'Exclui um Usuário',
-                        url:'http://localhost:3006/usuario/'
+                        url:process.env.URL_API + 'usuario/'
                     }
                 }
                 

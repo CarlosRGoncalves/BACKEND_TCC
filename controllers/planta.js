@@ -27,7 +27,7 @@ exports.getPlanta =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as plantas',
-                                url: 'http://localhost:3006/planta/' + tp_planta.id_planta
+                                url: process.env.URL_API + 'planta/' + tp_planta.id_planta
                             }
                         }
                     })
@@ -61,7 +61,7 @@ exports.postPlanta =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Planta',
-                            url: 'http://localhost:3006/planta'
+                            url: process.env.URL_API + 'planta'
                         }
                     }
                 }
@@ -97,7 +97,7 @@ exports.getPlantaID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes da Planta',
-                            url: 'http://localhost:3006/tipo_planta'
+                            url: process.env.URL_API + 'tipo_planta'
                         }
                     }
                 }
@@ -130,7 +130,7 @@ exports.patchPlanta =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Planta',
-                            url: 'http://localhost:3006/planta/' + req.body.id_planta
+                            url: process.env.URL_API + 'planta/' + req.body.id_planta
                         }
                     }
                 }
@@ -155,7 +155,7 @@ exports.deletePlanta =(req, res, next) =>{
                     request:{
                         tipo: 'POST',
                         descricao: 'insere um tipo de planta',
-                        url:'http://localhost:3006/tipo_planta/'
+                        url:process.env.URL_API + 'tipo_planta/'
                     }
                 }
                return res.status(202).send({response});

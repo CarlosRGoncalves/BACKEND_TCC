@@ -19,7 +19,7 @@ exports.getPragas_doenca =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as pragas e doencas',
-                                url: 'http://localhost:3006/pragas_doenca/' + tp_pragas_doenca.id_p_doenca
+                                url: process.env.URL_API + 'pragas_doenca/' + tp_pragas_doenca.id_p_doenca
                             }
                         }
                     })
@@ -49,7 +49,7 @@ exports.postPragas_doenca =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Pragas e doenca',
-                            url: 'http://localhost:3006/pragas_doenca'
+                            url: process.env.URL_API + 'pragas_doenca'
                         }
                     }
                 }
@@ -81,7 +81,7 @@ exports.getPragas_doencaID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes da Pragas e doencas',
-                            url: 'http://localhost:3006/pragas_doenca'
+                            url: process.env.URL_API + 'pragas_doenca'
                         }
                     }
                 }
@@ -111,7 +111,7 @@ exports.patchPragas_doenca =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Pragas_doenca',
-                            url: 'http://localhost:3006/pragas_doenca/' + req.body.id_p_doenca
+                            url: process.env.URL_API + 'pragas_doenca/' + req.body.id_p_doenca
                         }
                     }
                 }
@@ -136,7 +136,7 @@ exports.deletePragas_doenca =(req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'insere uma pragas_doenca',
-                        url:'http://localhost:3006/pragas_doenca/'
+                        url:process.env.URL_API + 'pragas_doenca/'
                     }
                 }
                return res.status(202).send({response});

@@ -27,7 +27,7 @@ exports.getInsumo =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos Insumos',
-                                url: 'http://localhost:3006/insumo/' + tp_insumo.id_insumo
+                                url: process.env.URL_API + 'insumo/' + tp_insumo.id_insumo
                             }
                         }
                     })
@@ -62,7 +62,7 @@ exports.postInsumo =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Insumos',
-                            url: 'http://localhost:3006/insumo'
+                            url: process.env.URL_API + 'insumo'
                         }
                     }
                 }
@@ -98,7 +98,7 @@ exports.getInsumoID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes do Insumo',
-                            url: 'http://localhost:3006/insumo'
+                            url: process.env.URL_API + 'insumo'
                         }
                     }
                 }
@@ -132,7 +132,7 @@ exports.patchInsumo =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Insumo',
-                            url: 'http://localhost:3006/insumo/' + req.body.id_insumo
+                            url: process.env.URL_API + 'insumo/' + req.body.id_insumo
                         }
                     }
                 }
@@ -157,7 +157,7 @@ exports.deleteInsumo =(req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descricao: 'insere uma insumo',
-                        url:'http://localhost:3006/insumo/'
+                        url:process.env.URL_API + 'insumo/'
                     }
                 }
                return res.status(202).send({response});

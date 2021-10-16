@@ -20,7 +20,7 @@ exports.getFornecedor =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos fornecedores',
-                                url: 'http://localhost:3006/fornecedor/' + tp_fornecedor.id_fornecedor
+                                url: process.env.URL_API + 'fornecedor/' + tp_fornecedor.id_fornecedor
                             }
                         }
                     })
@@ -50,7 +50,7 @@ exports.postFornecedor =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Fornecedor',
-                            url: 'http://localhost:3006/fornecedor'
+                            url: process.env.URL_API + 'fornecedor'
                         }
                     }
                 }
@@ -82,7 +82,7 @@ exports.getFornecedorID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes dos Fornecedores',
-                            url: 'http://localhost:3006/fornecedor'
+                            url: process.env.URL_API + 'fornecedor'
                         }
                     }
                 }
@@ -112,7 +112,7 @@ exports.patchFornecedor =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Fornecedor',
-                            url: 'http://localhost:3006/fornecedor/' + req.body.id_fornecedor
+                            url: process.env.URL_API + 'fornecedor/' + req.body.id_fornecedor
                         }
                     }
                 }
@@ -137,7 +137,7 @@ exports.deleteFornecedor =(req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'insere uma fornecedor',
-                        url:'http://localhost:3006/fornecedor/'
+                        url:process.env.URL_API + 'fornecedor/'
                     }
                 }
                return res.status(202).send({response});

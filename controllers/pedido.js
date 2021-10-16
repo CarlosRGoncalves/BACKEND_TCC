@@ -26,7 +26,7 @@ exports.postPedidoRelatorio = (req, res, next) =>{
                             request: {
                                 tipo: 'POST',
                                 descricao: 'Retorno de todos os Pedidos',
-                                url: 'http://localhost:3006/pedido/' 
+                                url: process.env.URL_API + 'pedido/' 
                             }
                         }
                     })
@@ -66,7 +66,7 @@ exports.getPedido = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos os Pedidos',
-                                url: 'http://localhost:3006/pedido/' + tp_pedido.id_pedido
+                                url: process.env.URL_API + 'pedido/' + tp_pedido.id_pedido
                             }
                         }
                     })
@@ -103,7 +103,7 @@ exports.getPedidoID = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorna o Pedido',
-                                url: 'http://localhost:3006/pedido/'
+                                url: process.env.URL_API + 'pedido/'
                             }
                         
                     }
@@ -211,7 +211,7 @@ exports.deletePedido = (req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descricao: 'Exclui um Pedido',
-                        url:'http://localhost:3006/pedido/'
+                        url:process.env.URL_API + 'pedido/'
                     }
                 }
                 

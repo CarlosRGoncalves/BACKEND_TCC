@@ -29,7 +29,7 @@ exports.getProducao =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as producoes',
-                                url: 'http://localhost:3006/producao/' + tp_producao.id_producao
+                                url: process.env.URL_API + 'producao/' + tp_producao.id_producao
                             }
                         }
                     })
@@ -69,7 +69,7 @@ exports.postProducaoRelatorio =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as producoes',
-                                url: 'http://localhost:3006/producao/' + tp_producao.id_producao
+                                url: process.env.URL_API + 'producao/' + tp_producao.id_producao
                             }
                         }
                     })
@@ -108,7 +108,7 @@ exports.postProducao =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Producao',
-                            url: 'http://localhost:3006/producao'
+                            url: process.env.URL_API + 'producao'
                         }
                     }
                 }
@@ -147,7 +147,7 @@ exports.getProducaoID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes da Produção!!!',
-                            url: 'http://localhost:3006/producao'
+                            url: process.env.URL_API + 'producao'
                         }
                     }
                 }
@@ -183,7 +183,7 @@ exports.patchProducao =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Producao',
-                            url: 'http://localhost:3006/tipo_producao/' + req.body.id_producao
+                            url: process.env.URL_API + 'tipo_producao/' + req.body.id_producao
                         }
                     }
                 }
@@ -208,7 +208,7 @@ exports.deleteProducao =(req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descricao: 'Deleta uma producao!!!',
-                        url:'http://localhost:3006/tipo_producao/'
+                        url:process.env.URL_API + 'tipo_producao/'
                     }
                 }
                return res.status(202).send({response});

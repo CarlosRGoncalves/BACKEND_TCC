@@ -22,7 +22,7 @@ exports.getSecao = (req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos os tipos de secões',
-                                url: 'http://localhost:3006/secao/' + tp_secao.id_secao
+                                url: process.env.URL_API + 'secao/' + tp_secao.id_secao
                             }
                         }
                     })
@@ -54,7 +54,7 @@ exports.postSecao = (req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Secao',
-                            url: 'http://localhost:3006/secao'
+                            url: process.env.URL_API + 'secao'
                         }
                     }
                 }
@@ -86,7 +86,7 @@ exports.getSecaoID = (req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes da Secao',
-                            url: 'http://localhost:3006/Secao'
+                            url: process.env.URL_API + 'Secao'
                         }
                     }
                 }
@@ -116,7 +116,7 @@ exports.patchSecao =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Secao',
-                            url: 'http://localhost:3006/secao/' + req.body.id_secao
+                            url: process.env.URL_API + 'secao/' + req.body.id_secao
                         }
                     }
                 }
@@ -141,7 +141,7 @@ exports.deleteSecao = (req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'Deleta um Secao',
-                        url:'http://localhost:3006/secao/'
+                        url:process.env.URL_API + 'secao/'
                     }
                 }
                return res.status(202).send({response});

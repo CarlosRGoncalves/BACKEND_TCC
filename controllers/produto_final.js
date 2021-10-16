@@ -22,7 +22,7 @@ exports.getProduto_final =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 medida: 'Retorno de todos os produtos finais',
-                                url: 'http://localhost:3006/produto_final/' + tp_produto_final.id_produto_final
+                                url: process.env.URL_API + 'produto_final/' + tp_produto_final.id_produto_final
                             }
                         }
                     })
@@ -55,7 +55,7 @@ exports.postProduto_final =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             medida: 'Insere Produto_final',
-                            url: 'http://localhost:3006/produto_final'
+                            url: process.env.URL_API + 'produto_final'
                         }
                     }
                 }
@@ -88,7 +88,7 @@ exports.getProduto_finalID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             medida: 'Retorna os detalhes da Produto Final',
-                            url: 'http://localhost:3006/produto_final'
+                            url: process.env.URL_API + 'produto_final'
                         }
                     }
                 }
@@ -119,7 +119,7 @@ exports.patchProduto_final =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             medida: 'Altera Produto_final',
-                            url: 'http://localhost:3006/produto_final/' + req.body.id_produto_final
+                            url: process.env.URL_API + 'produto_final/' + req.body.id_produto_final
                         }
                     }
                 }
@@ -144,7 +144,7 @@ exports.deleteProduto_final =(req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descriucao: 'Deleta uma produto_final',
-                        url:'http://localhost:3006/produto_final/'
+                        url:process.env.URL_API + 'produto_final/'
                     }
                 }
                return res.status(202).send({response});

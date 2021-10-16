@@ -25,7 +25,7 @@ exports.getPlantio =(req, res, next) =>{
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as plantios',
-                                url: 'http://localhost:3006/plantio/' + tp_plantio.id_plantio
+                                url: process.env.URL_API + 'plantio/' + tp_plantio.id_plantio
                             }
                         }
                     })
@@ -59,7 +59,7 @@ exports.postPlantio =(req, res, next) =>{
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Plantio',
-                            url: 'http://localhost:3006/plantio'
+                            url: process.env.URL_API + 'plantio'
                         }
                     }
                 }
@@ -95,7 +95,7 @@ exports.getPlantioID =(req, res, next) =>{
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes da Plantio',
-                            url: 'http://localhost:3006/tipo_plantio'
+                            url: process.env.URL_API + 'tipo_plantio'
                         }
                     }
                 }
@@ -128,7 +128,7 @@ exports.patchPlantio =(req, res, next) =>{
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Plantio',
-                            url: 'http://localhost:3006/tipo_plantio/' + req.body.id_plantio
+                            url: process.env.URL_API + 'tipo_plantio/' + req.body.id_plantio
                         }
                     }
                 }
@@ -153,7 +153,7 @@ exports.deletePlantio =(req, res, next) =>{
                     request:{
                         tipo: 'DELETE',
                         descricao: 'Deleta um plantio',
-                        url:'http://localhost:3006/tipo_plantio/'
+                        url:process.env.URL_API + 'tipo_plantio/'
                     }
                 }
                return res.status(202).send({response});
