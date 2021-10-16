@@ -117,7 +117,7 @@ exports.postUsuario = (req, res, next) =>{
             if(error){return res.status(500).send({error:error});}
             if(resultado.length<1){
                // console.log('aquidd')
-                return res.status(401).send({mensagem: 'Falha na autenticação'})
+                return res.status(401).send({mensagem: 'Falha na autenticação email'})
             }
             bcrypt.compare(req.body.senha, resultado[0].senha,(err, resultado_senha)=>{
                 if(err){
