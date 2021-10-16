@@ -39,6 +39,47 @@ exports.getProducao =(req, res, next) =>{
         )
     });
 }
+exports.postProducaoRelatorio =(req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});
+        }
+        conn.query(
+            'SELECT A.id_producao,A.id_insumo,A.id_plantio, A.id_p_doenca, A.adubacao, A.defensivo, A.data_defensivo,A.data_adubacao,A.qtd_adubacao,A.qtd_defensivo,B.data_plantio,C.nome_insumo, D.nome_p_doenca  FROM producao A INNER JOIN plantio B ON A.id_plantio = B.id_plantio INNER JOIN insumo c On A.id_insumo = C.id_insumo INNER JOIN pragas_doenca D ON A.id_p_doenca = D.id_p_doenca  where B.data_plantio BETWEEN ? AND ?',
+            [req.body.data_inicial,req.body.data_final],
+            (error, result, field) =>{
+                conn.release();
+                if(error){return res.status(500).send({error:error,response: null});}
+                const response = {
+                    quantidade: result.length,
+                    producao: result.map(tp_producao =>{
+                        return {
+                            id_producao: tp_producao.id_producao,
+                            id_insumo: tp_producao.id_insumo,
+                            id_plantio: tp_producao.id_plantio,
+                            id_p_doenca: tp_producao.id_p_doenca,
+                            nome_insumo:tp_producao.nome_insumo,
+                            nome_p_doenca:tp_producao.nome_p_doenca,
+                            data_plantio:tp_producao.data_plantio,
+                            adubacao: tp_producao.adubacao,
+                            defensivo: tp_producao.defensivo,
+                            data_defensivo: tp_producao.data_defensivo,
+                            data_adubacao: tp_producao.data_adubacao,
+                            qtd_adubacao: tp_producao.qtd_adubacao,
+                            qtd_defensivo: tp_producao.qtd_defensivo,
+                            request: {
+                                tipo: 'GET',
+                                descricao: 'Retorno de todos as producoes',
+                                url: 'http://localhost:3006/producao/' + tp_producao.id_producao
+                            }
+                        }
+                    })
+                }
+                return res.status(200).send(response);
+            }
+        )
+    })
+}
+
 
 //INSERE PLANTA 
 exports.postProducao =(req, res, next) =>{

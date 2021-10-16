@@ -44,7 +44,7 @@ exports.getPedido = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT A.id_pedido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome, C.email FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente',
+            'SELECT A.id_pedido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome, C.email FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente ORDER BY C.email',
             (error, result, field) =>{
                 conn.release();
                 //console.log(result)
