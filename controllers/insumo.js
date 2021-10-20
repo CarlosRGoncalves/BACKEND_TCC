@@ -41,13 +41,13 @@ exports.getInsumo =(req, res, next) =>{
 //INSERE PLANTA 
 exports.postInsumo =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
-        if(error){return res.status(500).send({error:error,response: null});
-        }
+        if(error){return res.status(500).send({error:error,response: null}); }
         conn.query(
             'INSERT INTO insumo (id_fornecedor,nome_insumo,descricao,quantidade,data,valor) VALUES (?,?,?,?,?,?)',
             [req.body.id_fornecedor,req.body.nome_insumo,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor],
             (error, result, field) =>{
                 conn.release();
+                console.log(error)
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     mensagem: 'Insumo cadastrado com sucesso!!!',
