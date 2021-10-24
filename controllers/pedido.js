@@ -72,7 +72,7 @@ exports.getPedido = (req, res, next) =>{
                         }
                     })
                 }
-                console.log(response)
+               // console.log(response)
                 return res.status(200).send(response);
             }
         )
@@ -110,7 +110,7 @@ exports.getPedidoID = (req, res, next) =>{
                         
                     }
                 }
-                console.log(response)
+                //console.log(response)
                 return res.status(200).send(response);
             }
         )
@@ -126,7 +126,7 @@ exports.postPedido = (req, res, next) =>{
             conn.release();
             if(error){return res.status(500).send({error:error,response: null});}
             if(resultado.length==0){
-                return  res.status(409).send({mensagem: 'Pedido não Encontrado!!!'});
+                return  res.status(409).send({mensagem: 'Produto Final não encontrado não Encontrado!!!'});
             }else{  
                    // console.log(resultado)
                     const valor_produto = resultado[0].valor;

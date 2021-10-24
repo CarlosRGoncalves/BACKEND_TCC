@@ -6,7 +6,7 @@ exports.getPlantio =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT A.id_plantio,A.id_secao,A.id_planta,A.descricao,A.quantidade,A.data_plantio,A.valor_custo,B.nome_planta FROM plantio A INNER JOIN planta B ON A.id_planta = B.id_planta',
+            'SELECT A.id_plantio,A.id_secao,A.id_planta,A.descricao,A.quantidade,A.data_plantio,A.valor_custo,B.nome_planta,C.descricao_secao FROM plantio A INNER JOIN planta B ON A.id_planta = B.id_planta INNER JOIN secao C ON C.id_secao = A.id_secao',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -22,6 +22,7 @@ exports.getPlantio =(req, res, next) =>{
                             quantidade: tp_plantio.quantidade,
                             data_plantio: tp_plantio.data_plantio,
                             valor_custo: tp_plantio.valor_custo,
+                            descricao_secao: tp_plantio.descricao_secao,
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as plantios',

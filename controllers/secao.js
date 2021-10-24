@@ -7,7 +7,7 @@ exports.getSecao = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT * FROM secao',
+            'SELECT * FROM secao a INNER JOIN usuario b ON A.id_usuario = B.id_usuario',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -17,16 +17,19 @@ exports.getSecao = (req, res, next) =>{
                         return {
                             id_secao: tp_secao.id_secao,
                             id_usuario: tp_secao.id_usuario,
-                            descricao: tp_secao.descricao,
+                            descricao_secao: tp_secao.descricao_secao,
                             area: tp_secao.area,
+                            nome: tp_secao.nome,
                             request: {
                                 tipo: 'GET',
-                                descricao: 'Retorno de todos os tipos de secões',
+                                descricao_secao: 'Retorno de todos os tipos de secões',
                                 url: process.env.URL_API + 'secao/' + tp_secao.id_secao
                             }
                         }
                     })
                 }
+                console.log(response);
+                
                 return res.status(200).send(response);
             }
         )
@@ -40,8 +43,8 @@ exports.postSecao = (req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'INSERT INTO secao (id_usuario,descricao,area) VALUES (?,?,?)',
-            [req.body.id_usuario,req.body.descricao,req.body.area],
+            'INSERT INTO secao (id_usuario,descricao_secao,area) VALUES (?,?,?)',
+            [req.body.id_usuario,req.body.descricao_secao,req.body.area],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -49,11 +52,11 @@ exports.postSecao = (req, res, next) =>{
                     mensagem: 'Seção cadastrada com sucesso!!!',
                     secaoCriado: {
                         usuario: req.body.id_usuario,
-                        descricao: req.body.descricao,
+                        descricao_secao: req.body.descricao_secao,
                         area: req.body.area,
                         request: {
                             tipo: 'POST',
-                            descricao: 'Insere Secao',
+                            descricao_secao: 'Insere Secao',
                             url: process.env.URL_API + 'secao'
                         }
                     }
@@ -81,11 +84,11 @@ exports.getSecaoID = (req, res, next) =>{
                 const response = {
                     secao: {
                         id_usuario: result[0].id_usuario,
-                        descricao: result[0].descricao,
+                        descricao_secao: result[0].descricao_secao,
                         area: result[0].area,
                         request: {
                             tipo: 'GET',
-                            descricao: 'Retorna os detalhes da Secao',
+                            descricao_secao: 'Retorna os detalhes da Secao',
                             url: process.env.URL_API + 'Secao'
                         }
                     }
@@ -102,8 +105,8 @@ exports.patchSecao =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE secao SET  descricao = ?, area = ? WHERE id_secao =?',
-            [req.body.descricao,req.body.area,req.params.id_secao],
+            'UPDATE secao SET  descricao_secao = ?, area = ? WHERE id_secao =?',
+            [req.body.descricao_secao,req.body.area,req.params.id_secao],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -111,11 +114,11 @@ exports.patchSecao =(req, res, next) =>{
                     mensagem: 'Seção atualizada com sucesso!!!',
                     SecaoAtualizado: {
                         id_usuario: req.body.id_usuario,
-                        descricao: req.body.descricao,
+                        descricao_secao: req.body.descricao_secao,
                         area: req.body.area,
                         request: {
                             tipo: 'PATCH',
-                            descricao: 'Altera Secao',
+                            descricao_secao: 'Altera Secao',
                             url: process.env.URL_API + 'secao/' + req.body.id_secao
                         }
                     }

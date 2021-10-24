@@ -6,11 +6,11 @@ exports.getInsumo =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query( 
-            'SELECT A.id_insumo,A.nome_insumo,A.descricao,A.quantidade,A.data,A.valor,B.nome_fornecedor FROM insumo A INNER JOIN fornecedor B ON A.id_fornecedor = B.id_fornecedor',
+            'SELECT A.id_insumo,A.nome_insumo,A.descricao,A.quantidade,A.data,A.valor,A.unidade_medida,B.nome_fornecedor FROM insumo A INNER JOIN fornecedor B ON A.id_fornecedor = B.id_fornecedor',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
-                console.log(result)
+               // console.log(result)
 
                 const response = {
                     quantidade: result.length,
@@ -24,6 +24,7 @@ exports.getInsumo =(req, res, next) =>{
                             quantidade: tp_insumo.quantidade,
                             data: tp_insumo.data,
                             valor: tp_insumo.valor,
+                            unidade_medida: tp_insumo.unidade_medida,
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos Insumos',
@@ -43,11 +44,11 @@ exports.postInsumo =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null}); }
         conn.query(
-            'INSERT INTO insumo (id_fornecedor,nome_insumo,descricao,quantidade,data,valor) VALUES (?,?,?,?,?,?)',
-            [req.body.id_fornecedor,req.body.nome_insumo,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor],
+            'INSERT INTO insumo (id_fornecedor,nome_insumo,descricao,quantidade,data,valor,unidade_medida) VALUES (?,?,?,?,?,?,?)',
+            [req.body.id_fornecedor,req.body.nome_insumo,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor,req.body.unidade_medida],
             (error, result, field) =>{
                 conn.release();
-                console.log(error)
+                //console.log(error)
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     mensagem: 'Insumo cadastrado com sucesso!!!',
@@ -59,6 +60,7 @@ exports.postInsumo =(req, res, next) =>{
                         quantidade: req.body.quantidade,
                         data: req.body.data,
                         valor: req.body.valor,
+                        unidade_medida: req.body.unidade_medida,
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Insumos',
@@ -95,6 +97,7 @@ exports.getInsumoID =(req, res, next) =>{
                         quantidade: result[0].quantidade,
                         data: result[0].data,
                         valor: result[0].valor,
+                        unidade_medida: result[0].unidade_medida,
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes do Insumo',
@@ -114,8 +117,8 @@ exports.patchInsumo =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'UPDATE insumo SET  id_fornecedor = ?,nome_insumo = ?,descricao= ?, quantidade = ?, data =?, valor =? WHERE id_insumo =?',
-            [req.body.id_fornecedor,req.body.nome_insumo,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor,req.params.id_insumo],
+            'UPDATE insumo SET  id_fornecedor = ?,nome_insumo = ?,descricao= ?, quantidade = ?, data =?, valor =?,unidade_medida = ? WHERE id_insumo =?',
+            [req.body.id_fornecedor,req.body.nome_insumo,req.body.descricao,req.body.quantidade,req.body.data,req.body.valor,req.body.unidade_medida,req.params.id_insumo],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -129,6 +132,7 @@ exports.patchInsumo =(req, res, next) =>{
                         quantidade: req.body.quantidade,
                         data: req.body.data,
                         valor: req.body.valor,
+                        unidade_medida: req.body.unidade_medida,
                         request: {
                             tipo: 'PATCH',
                             descricao: 'Altera Insumo',

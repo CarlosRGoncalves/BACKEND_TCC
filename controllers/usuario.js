@@ -97,7 +97,7 @@ exports.postUsuarioCad = (req, res, next) =>{
                                    email: req.body.email
                                 }
                             }
-                            console.log(req.body.nome)
+                            //console.log(req.body.nome)
                             res.status(201).send({response});
                     })
                 })

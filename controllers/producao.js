@@ -6,7 +6,7 @@ exports.getProducao =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         conn.query(
-            'SELECT A.id_producao,A.id_insumo,A.id_plantio, A.id_p_doenca, A.adubacao, A.defensivo, A.data_defensivo,A.data_adubacao,A.qtd_adubacao,A.qtd_defensivo,B.nome_insumo, C.nome_p_doenca  FROM producao A INNER JOIN insumo B ON A.id_insumo = B.id_insumo INNER JOIN pragas_doenca C ON C.id_p_doenca = A.id_p_doenca',
+            'SELECT A.id_producao,A.id_insumo,A.id_plantio, A.quantidade_producao,A.unidade_medida,data_producao,A.id_p_doenca, A.adubacao, A.defensivo, A.data_defensivo,A.data_adubacao,A.qtd_adubacao,A.qtd_defensivo,B.nome_insumo, C.nome_p_doenca  FROM producao A INNER JOIN insumo B ON A.id_insumo = B.id_insumo LEFT JOIN pragas_doenca C ON C.id_p_doenca = A.id_p_doenca',
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -26,6 +26,9 @@ exports.getProducao =(req, res, next) =>{
                             data_adubacao: tp_producao.data_adubacao,
                             qtd_adubacao: tp_producao.qtd_adubacao,
                             qtd_defensivo: tp_producao.qtd_defensivo,
+                            unidade_medida: tp_producao.unidade_medida,
+                            quantidade_producao: tp_producao.quantidade_producao,
+                            data_producao: tp_producao.data_producao,
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as producoes',
@@ -44,7 +47,7 @@ exports.postProducaoRelatorio =(req, res, next) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
         conn.query(
-            'SELECT A.id_producao,A.id_insumo,A.id_plantio, A.id_p_doenca, A.adubacao, A.defensivo, A.data_defensivo,A.data_adubacao,A.qtd_adubacao,A.qtd_defensivo,B.data_plantio,C.nome_insumo, D.nome_p_doenca  FROM producao A INNER JOIN plantio B ON A.id_plantio = B.id_plantio INNER JOIN insumo c On A.id_insumo = C.id_insumo INNER JOIN pragas_doenca D ON A.id_p_doenca = D.id_p_doenca  where B.data_plantio BETWEEN ? AND ?',
+            'SELECT A.id_producao,A.id_insumo,A.id_plantio, A.unidade_medida,A.quantidade_producao,A.data_producao,A.id_p_doenca, A.adubacao, A.defensivo, A.data_defensivo,A.data_adubacao,A.qtd_adubacao,A.qtd_defensivo,B.data_plantio,C.nome_insumo, D.nome_p_doenca  FROM producao A INNER JOIN plantio B ON A.id_plantio = B.id_plantio INNER JOIN insumo c On A.id_insumo = C.id_insumo LEFT JOIN pragas_doenca D ON A.id_p_doenca = D.id_p_doenca  where A.data_producao BETWEEN ? AND ?',
             [req.body.data_inicial,req.body.data_final],
             (error, result, field) =>{
                 conn.release();
@@ -66,6 +69,9 @@ exports.postProducaoRelatorio =(req, res, next) =>{
                             data_adubacao: tp_producao.data_adubacao,
                             qtd_adubacao: tp_producao.qtd_adubacao,
                             qtd_defensivo: tp_producao.qtd_defensivo,
+                            unidade_medida: tp_producao.unidade_medida,
+                            quantidade_producao: tp_producao.quantidade_producao,
+                            data_producao: tp_producao.data_producao,
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorno de todos as producoes',
@@ -74,6 +80,7 @@ exports.postProducaoRelatorio =(req, res, next) =>{
                         }
                     })
                 }
+               // console.log(response)
                 return res.status(200).send(response);
             }
         )
@@ -86,11 +93,17 @@ exports.postProducao =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
+        if(req.body.id_p_doenca ==''){
+            req.body.id_p_doenca= null
+        }
+
+       // console.log(req.body.id_p_doenca)
         conn.query(
-            'INSERT INTO producao (id_insumo,id_plantio,id_p_doenca,adubacao,defensivo,data_defensivo,data_adubacao,qtd_adubacao,qtd_defensivo) VALUES (?,?,?,?,?,?,?,?,?)',
-            [req.body.id_insumo,req.body.id_plantio,req.body.id_p_doenca,req.body.adubacao,req.body.defensivo,req.body.data_defensivo,req.body.data_adubacao,req.body.qtd_adubacao,req.body.qtd_defensivo],
+            'INSERT INTO producao (id_insumo,id_plantio,id_p_doenca,data_producao,unidade_medida,quantidade_producao) VALUES (?,?,?,?,?,?)',
+            [req.body.id_insumo,req.body.id_plantio,req.body.id_p_doenca,req.body.data_producao,req.body.unidade_medida,req.body.quantidade_producao],
             (error, result, field) =>{
                 conn.release();
+                //console.log(error)
                 if(error){return res.status(500).send({error:error,response: null});}
                 const response = {
                     mensagem: 'Produção cadastrada com sucesso!!!',
@@ -105,6 +118,9 @@ exports.postProducao =(req, res, next) =>{
                         data_adubacao: req.body.data_adubacao,
                         qtd_adubacao: req.body.qtd_adubacao,
                         qtd_defensivo: req.body.qtd_defensivo,
+                        data_producao: req.body.data_producao,
+                        unidade_medida: req.body.unidade_medida,
+                        quantidade_producao: req.body.quantidade_producao,
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere Producao',
@@ -144,6 +160,9 @@ exports.getProducaoID =(req, res, next) =>{
                         data_adubacao: result[0].data_adubacao,
                         qtd_adubacao: result[0].qtd_adubacao,
                         qtd_defensivo: result[0].qtd_defensivo,
+                        unidade_medida: result[0].unidade_medida,
+                        quantidade_producao: result[0].quantidade_producao,
+                        data_producao: result[0].data_producao,
                         request: {
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes da Produção!!!',
@@ -151,6 +170,7 @@ exports.getProducaoID =(req, res, next) =>{
                         }
                     }
                 }
+               // console.log(response)
                return res.status(200).send({response});
             }
         )
@@ -162,9 +182,12 @@ exports.patchProducao =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
+        if(req.body.id_p_doenca ==''){
+            req.body.id_p_doenca= null
+        }
         conn.query(
-            'UPDATE producao SET  id_insumo = ?,id_plantio= ?,id_p_doenca= ?,adubacao= ?,defensivo= ?,data_defensivo= ?,data_adubacao= ?,qtd_adubacao= ?,qtd_defensivo= ? WHERE id_producao =?',
-            [req.body.id_insumo,req.body.id_plantio,req.body.id_p_doenca,req.body.adubacao,req.body.defensivo,req.body.data_defensivo,req.body.data_adubacao,req.body.qtd_adubacao,req.body.qtd_defensivo,req.params.id_producao],
+            'UPDATE producao SET  id_insumo = ?,id_plantio= ?,id_p_doenca= ?,data_producao=?,unidade_medida=?,quantidade_producao=? WHERE id_producao =?',
+            [req.body.id_insumo,req.body.id_plantio,req.body.id_p_doenca,req.body.data_producao,req.body.unidade_medida,req.body.quantidade_producao,req.params.id_producao],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}

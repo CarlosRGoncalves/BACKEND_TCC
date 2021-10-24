@@ -38,9 +38,11 @@ exports.postColheita =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
+        conn.query('SELECT * FROM pedido WHERE id_pedido = ?', [req.body.id_pedido], (error, resultado)=>{
+        conn.release();
         conn.query(
             'INSERT INTO colheita (id_producao,id_pedido,data_colheita,quantidade) VALUES (?,?,?,?)',
-            [req.body.id_producao,req.body.id_pedido,req.body.data_colheita,req.body.quantidade],
+            [req.body.id_producao,req.body.id_pedido,req.body.data_colheita,resultado[0].quantidade],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -60,8 +62,8 @@ exports.postColheita =(req, res, next) =>{
                     }
                 }
                return res.status(201).send({response});
-            }
-        )
+            })
+        })
     })
 }
 // RETORNA OS DADOS DA PLANTA
@@ -103,9 +105,11 @@ exports.patchColheita =(req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});
         }
+        conn.query('SELECT * FROM pedido WHERE id_pedido = ?', [req.body.id_pedido], (error, resultado)=>{
+            conn.release();
         conn.query(
             'UPDATE colheita SET  id_producao = ?,id_pedido= ?,data_colheita = ?, quantidade =? WHERE id_colheita =?',
-            [req.body.id_producao,req.body.id_pedido,req.body.data_colheita,req.body.quantidade,req.params.id_colheita],
+            [req.body.id_producao,req.body.id_pedido,req.body.data_colheita,resultado[0].quantidade,req.params.id_colheita],
             (error, result, field) =>{
                 conn.release();
                 if(error){return res.status(500).send({error:error,response: null});}
@@ -124,8 +128,8 @@ exports.patchColheita =(req, res, next) =>{
                     }
                 }
                 return res.status(202).send({response});
-            }
-        )
+            })
+        })
     })
 }
 
