@@ -38,7 +38,48 @@ exports.postPedidoRelatorio = (req, res, next) =>{
     });
 }
 
+exports.postPedidoRelatorio2 = (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){return res.status(500).send({error:error,response: null});}
+        req.body.nome_cliente = req.body.nome_cliente + '%'
+        conn.query(
+            'SELECT A.id_pedido,A.valor_produto_vendido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome,C.email, C.nome AS nome_cliente FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente where C.nome LIKE ?',
+            [req.body.nome_cliente],
+            (error, result, field) =>{
+                conn.release();
+              //  console.log(error)
+                if(error){return res.status(500).send({error:error,response: null});}
 
+                const response = {
+                    quantidade: result.length,
+                    pedido: result.map(tp_pedido =>{
+                        return {
+                            id_pedido: tp_pedido.id_pedido,
+                            id_produto_final: tp_pedido.id_produto_final,
+                            email: tp_pedido.email,
+                            nome_produto_final: tp_pedido.nome,
+                            id_cliente: tp_pedido.id_cliente,
+                            status: tp_pedido.status,
+                            descricao: tp_pedido.descricao,
+                            quantidade: tp_pedido.quantidade,
+                            valor: tp_pedido.valor,
+                            data: tp_pedido.data,
+                            valor_produto_vendido: tp_pedido.valor_produto_vendido,
+                            nome_cliente:tp_pedido.nome_cliente,
+                            request: {
+                                tipo: 'POST',
+                                descricao: 'Retorno de todos os Pedidos',
+                                url: process.env.URL_API + 'pedido/' 
+                            }
+                        }
+                    })
+                }
+               // console.log(response)
+                return res.status(200).send(response);
+            }
+        )
+    });
+}
 //RETORNA TODOS USUARIOS
 exports.getPedido = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
