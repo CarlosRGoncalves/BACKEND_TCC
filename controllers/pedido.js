@@ -9,32 +9,61 @@ const login = require('../middleware/login');
 exports.postPedidoRelatorio = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
-        conn.query(
-            'select B.nome,sum(A.quantidade) AS quantidade_total,sum(A.valor) AS soma_total from pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final where A.data BETWEEN ? AND ? GROUP BY A.id_produto_final ',
-            [req.body.data_inicial,req.body.data_final],
-            (error, result, field) =>{
-                conn.release();
-                if(error){return res.status(500).send({error:error,response: null});}
+        if(req.body.data_inicial != '' && req.body.data_final !='')
+        {
+            conn.query(
+                'select B.nome,sum(A.quantidade) AS quantidade_total,sum(A.valor) AS soma_total from pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final where A.data BETWEEN ? AND ? GROUP BY A.id_produto_final ',
+                [req.body.data_inicial,req.body.data_final],
+                (error, result, field) =>{
+                    conn.release();
+                    if(error){return res.status(500).send({error:error,response: null});}
 
-                const response = {
-                    quantidade: result.length,
-                    pedido: result.map(tp_pedido =>{
-                        return {
-                            nome: tp_pedido.nome,
-                            quantidade: tp_pedido.quantidade_total,
-                            valor: tp_pedido.soma_total,
-                            request: {
-                                tipo: 'POST',
-                                descricao: 'Retorno de todos os Pedidos',
-                                url: process.env.URL_API + 'pedido/' 
+                    const response = {
+                        quantidade: result.length,
+                        pedido: result.map(tp_pedido =>{
+                            return {
+                                nome: tp_pedido.nome,
+                                quantidade: tp_pedido.quantidade_total,
+                                valor: tp_pedido.soma_total,
+                                request: {
+                                    tipo: 'POST',
+                                    descricao: 'Retorno de todos os Pedidos',
+                                    url: process.env.URL_API + 'pedido/' 
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
+                    //console.log(response)
+                    return res.status(200).send(response);
                 }
-                //console.log(response)
-                return res.status(200).send(response);
-            }
-        )
+            )
+        }else{
+            conn.query(
+                'select B.nome,sum(A.quantidade) AS quantidade_total,sum(A.valor) AS soma_total from pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final GROUP BY A.id_produto_final ',
+                (error, result, field) =>{
+                    conn.release();
+                    if(error){return res.status(500).send({error:error,response: null});}
+
+                    const response = {
+                        quantidade: result.length,
+                        pedido: result.map(tp_pedido =>{
+                            return {
+                                nome: tp_pedido.nome,
+                                quantidade: tp_pedido.quantidade_total,
+                                valor: tp_pedido.soma_total,
+                                request: {
+                                    tipo: 'POST',
+                                    descricao: 'Retorno de todos os Pedidos',
+                                    url: process.env.URL_API + 'pedido/' 
+                                }
+                            }
+                        })
+                    }
+                    //console.log(response)
+                    return res.status(200).send(response);
+                }
+            )
+        }
     });
 }
 
@@ -42,42 +71,158 @@ exports.postPedidoRelatorio2 = (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){return res.status(500).send({error:error,response: null});}
         req.body.nome_cliente = req.body.nome_cliente + '%'
-        conn.query(
-            'SELECT A.id_pedido,A.valor_produto_vendido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome,C.email, C.nome AS nome_cliente FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente where C.nome LIKE ?',
-            [req.body.nome_cliente],
-            (error, result, field) =>{
-                conn.release();
-              //  console.log(error)
-                if(error){return res.status(500).send({error:error,response: null});}
-
-                const response = {
-                    quantidade: result.length,
-                    pedido: result.map(tp_pedido =>{
-                        return {
-                            id_pedido: tp_pedido.id_pedido,
-                            id_produto_final: tp_pedido.id_produto_final,
-                            email: tp_pedido.email,
-                            nome_produto_final: tp_pedido.nome,
-                            id_cliente: tp_pedido.id_cliente,
-                            status: tp_pedido.status,
-                            descricao: tp_pedido.descricao,
-                            quantidade: tp_pedido.quantidade,
-                            valor: tp_pedido.valor,
-                            data: tp_pedido.data,
-                            valor_produto_vendido: tp_pedido.valor_produto_vendido,
-                            nome_cliente:tp_pedido.nome_cliente,
-                            request: {
-                                tipo: 'POST',
-                                descricao: 'Retorno de todos os Pedidos',
-                                url: process.env.URL_API + 'pedido/' 
+        if(req.body.status == 'Todos'&& req.body.data_inicial == '' && req.body.data_final =='')
+        {
+            conn.query(
+                'SELECT A.id_pedido,A.valor_produto_vendido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome,C.email, C.nome AS nome_cliente FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente where C.nome LIKE ?',
+                [req.body.nome_cliente],
+                (error, result, field) =>{
+                    conn.release();
+                  //  console.log(error)
+                    if(error){return res.status(500).send({error:error,response: null});}
+    
+                    const response = {
+                        quantidade: result.length,
+                        pedido: result.map(tp_pedido =>{
+                            return {
+                                id_pedido: tp_pedido.id_pedido,
+                                id_produto_final: tp_pedido.id_produto_final,
+                                email: tp_pedido.email,
+                                nome_produto_final: tp_pedido.nome,
+                                id_cliente: tp_pedido.id_cliente,
+                                status: tp_pedido.status,
+                                descricao: tp_pedido.descricao,
+                                quantidade: tp_pedido.quantidade,
+                                valor: tp_pedido.valor,
+                                data: tp_pedido.data,
+                                valor_produto_vendido: tp_pedido.valor_produto_vendido,
+                                nome_cliente:tp_pedido.nome_cliente,
+                                request: {
+                                    tipo: 'POST',
+                                    descricao: 'Retorno de todos os Pedidos',
+                                    url: process.env.URL_API + 'pedido/' 
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
+                   // console.log(response)
+                    return res.status(200).send(response);
                 }
-               // console.log(response)
-                return res.status(200).send(response);
-            }
-        )
+            )
+        }else if((req.body.status == 'Não Pago'||req.body.status == 'Pago') && req.body.data_inicial == '' && req.body.data_final ==''){
+            conn.query(
+                'SELECT A.id_pedido,A.valor_produto_vendido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome,C.email, C.nome AS nome_cliente FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente where C.nome LIKE ? AND A.status = ?',
+                [req.body.nome_cliente,req.body.status],
+                (error, result, field) =>{
+                    conn.release();
+                  //  console.log(error)
+                    if(error){return res.status(500).send({error:error,response: null});}
+    
+                    const response = {
+                        quantidade: result.length,
+                        pedido: result.map(tp_pedido =>{
+                            return {
+                                id_pedido: tp_pedido.id_pedido,
+                                id_produto_final: tp_pedido.id_produto_final,
+                                email: tp_pedido.email,
+                                nome_produto_final: tp_pedido.nome,
+                                id_cliente: tp_pedido.id_cliente,
+                                status: 0,
+                                descricao: tp_pedido.descricao,
+                                quantidade: tp_pedido.quantidade,
+                                valor: tp_pedido.valor,
+                                data: tp_pedido.data,
+                                valor_produto_vendido: tp_pedido.valor_produto_vendido,
+                                nome_cliente:tp_pedido.nome_cliente,
+                                request: {
+                                    tipo: 'POST',
+                                    descricao: 'Retorno de todos os Pedidos',
+                                    url: process.env.URL_API + 'pedido/' 
+                                }
+                            }
+                        })
+                    }
+                   // console.log(response)
+                    return res.status(200).send(response);
+                }
+            )
+        }
+        else if((req.body.status == 'Não Pago'||req.body.status == 'Pago') && req.body.data_inicial != '' && req.body.data_final !=''){
+            conn.query(
+                'SELECT A.id_pedido,A.valor_produto_vendido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome,C.email, C.nome AS nome_cliente FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente where C.nome LIKE ? AND A.status = ? AND A.data between ? and ?',
+                [req.body.nome_cliente,req.body.status,req.body.data_inicial,req.body.data_final],
+                (error, result, field) =>{
+                    conn.release();
+                  //  console.log(error)
+                    if(error){return res.status(500).send({error:error,response: null});}
+    
+                    const response = {
+                        quantidade: result.length,
+                        pedido: result.map(tp_pedido =>{
+                            return {
+                                id_pedido: tp_pedido.id_pedido,
+                                id_produto_final: tp_pedido.id_produto_final,
+                                email: tp_pedido.email,
+                                nome_produto_final: tp_pedido.nome,
+                                id_cliente: tp_pedido.id_cliente,
+                                status: 0,
+                                descricao: tp_pedido.descricao,
+                                quantidade: tp_pedido.quantidade,
+                                valor: tp_pedido.valor,
+                                data: tp_pedido.data,
+                                valor_produto_vendido: tp_pedido.valor_produto_vendido,
+                                nome_cliente:tp_pedido.nome_cliente,
+                                request: {
+                                    tipo: 'POST',
+                                    descricao: 'Retorno de todos os Pedidos',
+                                    url: process.env.URL_API + 'pedido/' 
+                                }
+                            }
+                        })
+                    }
+                   // console.log(response)
+                    return res.status(200).send(response);
+                }
+            )
+        }else if(req.body.status == 'Todos' && req.body.data_inicial != '' && req.body.data_final !=''){
+            conn.query(
+                'SELECT A.id_pedido,A.valor_produto_vendido,A.id_produto_final,A.id_cliente,A.status,A.descricao,A.quantidade,A.valor,A.data,B.nome,C.email, C.nome AS nome_cliente FROM pedido A INNER JOIN produto_final B ON A.id_produto_final = B.id_produto_final INNER JOIN cliente C ON C.id_cliente = A.id_cliente where (C.nome LIKE ?) AND (A.data BETWEEN ? and ?)',
+                [req.body.nome_cliente,req.body.data_inicial,req.body.data_final],
+                (error, result, field) =>{
+                    conn.release();
+                  //  console.log(error)
+                    if(error){return res.status(500).send({error:error,response: null});}
+    
+                    const response = {
+                        quantidade: result.length,
+                        pedido: result.map(tp_pedido =>{
+                            return {
+                                id_pedido: tp_pedido.id_pedido,
+                                id_produto_final: tp_pedido.id_produto_final,
+                                email: tp_pedido.email,
+                                nome_produto_final: tp_pedido.nome,
+                                id_cliente: tp_pedido.id_cliente,
+                                status: tp_pedido.status,
+                                descricao: tp_pedido.descricao,
+                                quantidade: tp_pedido.quantidade,
+                                valor: tp_pedido.valor,
+                                data: tp_pedido.data,
+                                valor_produto_vendido: tp_pedido.valor_produto_vendido,
+                                nome_cliente:tp_pedido.nome_cliente,
+                                request: {
+                                    tipo: 'POST',
+                                    descricao: 'Retorno de todos os Pedidos',
+                                    url: process.env.URL_API + 'pedido/' 
+                                }
+                            }
+                        })
+                    }
+                   // console.log(response)
+                    return res.status(200).send(response);
+                }
+            )
+        }
+        
     });
 }
 //RETORNA TODOS USUARIOS

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
+
 //RETORNA TODOS OD TIPOS DE PLANTAS
 exports.getSecao = (req, res, next) =>{
     console.log("ENTROU")
@@ -28,7 +29,7 @@ exports.getSecao = (req, res, next) =>{
                         }
                     })
                 }
-                console.log(response);
+             //   console.log(response);
                 
                 return res.status(200).send(response);
             }
